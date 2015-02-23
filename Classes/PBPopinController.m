@@ -46,6 +46,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         popinWindow = [[PBPopinWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        popinWindow.backgroundColor = [UIColor clearColor];
     });
     return popinWindow;
 }
