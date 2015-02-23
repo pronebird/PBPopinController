@@ -20,18 +20,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLocale *locale = [NSLocale currentLocale];
-    NSArray *countryArray = [NSLocale ISOCountryCodes];
-    NSMutableArray *sortedCountryArray = [NSMutableArray new];
+    NSString *identifier = [[NSLocale preferredLanguages] firstObject];
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:identifier];
+    NSMutableArray *countryList = [NSMutableArray new];
     
-    for(NSString *countryCode in countryArray) {
+    for(NSString *countryCode in [NSLocale ISOCountryCodes]) {
         NSString *displayNameString = [locale displayNameForKey:NSLocaleCountryCode value:countryCode];
-        [sortedCountryArray addObject:displayNameString];
+        [countryList addObject:displayNameString];
     }
-    
-    [sortedCountryArray sortUsingSelector:@selector(localizedCompare:)];
-    
-    self.countryList = sortedCountryArray;
+
+    self.countryList = [countryList sortedArrayUsingSelector:@selector(localizedCompare:)];
     
     if(self.initialCountry) {
         NSUInteger index = [self.countryList indexOfObject:self.initialCountry];
