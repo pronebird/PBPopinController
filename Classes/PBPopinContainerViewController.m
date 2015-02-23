@@ -64,6 +64,18 @@
     }
 }
 
+#pragma mark - Content size changes
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        self.contentViewController.view.frame = [self _frameForContentController];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
+}
+
+- (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    self.contentViewController.view.frame = [self _frameForContentController];
+}
+
 #pragma mark - Presentation animations
 
 - (CGRect)_frameForContentController {
