@@ -17,9 +17,8 @@ Custom controller that pops from the bottom, exactly like keyboard.
 #### Known issues
 
 1. May get stuck when presented and dismissed too fast. Race condition.
-2. Orientation changes aren't handled.
-3. Unwinding does not work. Manually dismiss controller.
-4. Does not dismiss itself if presenting controller dismissed. Dismiss manually.
+2. Unwinding does not work. Manually dismiss controller.
+3. Does not dismiss itself if presenting controller dismissed. Dismiss manually.
 
 All contributions, PRs, comments are welcome!
 
@@ -87,7 +86,7 @@ Content controllers can access associated popin controller via `self.popinContro
 
 By default PopinController will use half of screen to present your content controller. However you can change that by setting a desired `preferredContentSize` on your content view controller.
 
-I prefer to override `preferredContentSize`, for example:
+It's not the best option, but the easiest to override `preferredContentSize`, for example:
 
 ```objective-c
 - (CGSize)preferredContentSize {
