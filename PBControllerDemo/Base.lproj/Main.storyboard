@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6750" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="oO4-te-ymq">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6735"/>
+    </dependencies>
+    <scenes>
+        <!--Root View Controller-->
+        <scene sceneID="qrH-Jf-tYu">
+            <objects>
+                <tableViewController id="7Mi-qa-DLC" customClass="TableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="PDa-w9-8MQ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="ONL-mh-ybj">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="jqx-Po-p81">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jqx-Po-p81" id="YLP-2c-yGS">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Keyboard will dismiss the popin controller" textAlignment="center" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="0ul-Yk-nrV">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="0ul-Yk-nrV" firstAttribute="top" secondItem="YLP-2c-yGS" secondAttribute="top" id="75k-T3-FrM"/>
+                                                <constraint firstItem="0ul-Yk-nrV" firstAttribute="leading" secondItem="YLP-2c-yGS" secondAttribute="leading" id="Ayg-ha-rmz"/>
+                                                <constraint firstAttribute="trailing" secondItem="0ul-Yk-nrV" secondAttribute="trailing" id="fKr-Ki-hQD"/>
+                                                <constraint firstAttribute="bottom" secondItem="0ul-Yk-nrV" secondAttribute="bottom" id="zrn-2r-JZi"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="xwv-qZ-CtC">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xwv-qZ-CtC" id="ngY-Tu-rsX">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksd-hb-rZf">
+                                                    <rect key="frame" x="251.5" y="11.5" width="98.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="ksd-hb-rZf" secondAttribute="centerX" id="4m2-R1-A0j"/>
+                                                <constraint firstAttribute="centerY" secondItem="ksd-hb-rZf" secondAttribute="centerY" id="eoq-ZH-41y"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Hj9-Nu-AA4" kind="custom" identifier="ChooseDate" customClass="PBPopinSegue" id="MG0-x0-X3I"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Tqn-5I-iTd">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tqn-5I-iTd" id="d0K-jr-bxf">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose category" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yKw-NZ-XeG">
+                                                    <rect key="frame" x="234" y="11" width="132" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="yKw-NZ-XeG" secondAttribute="centerX" id="84j-Pt-18D"/>
+                                                <constraint firstAttribute="centerY" secondItem="yKw-NZ-XeG" secondAttribute="centerY" id="9yu-Ie-NZw"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="eOP-4B-4eL" kind="custom" identifier="ChooseCategory" customClass="PBPopinSegue" id="gvT-Eh-RUQ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="7Mi-qa-DLC" id="dbT-jq-0BJ"/>
+                            <outlet property="delegate" destination="7Mi-qa-DLC" id="GnE-b5-mUA"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="GGU-Af-VDI"/>
+                    <connections>
+                        <outlet property="countryLabel" destination="yKw-NZ-XeG" id="9oM-1z-rt4"/>
+                        <outlet property="dateLabel" destination="ksd-hb-rZf" id="e43-cO-w68"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="clk-Kd-5gR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="634" y="331"/>
+        </scene>
+        <!--Date Picker View Controller-->
+        <scene sceneID="JJR-rR-FlQ">
+            <objects>
+                <viewController id="Hj9-Nu-AA4" customClass="DatePickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0Qh-mf-wUN"/>
+                        <viewControllerLayoutGuide type="bottom" id="PQP-1Y-dCV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eMA-tH-g4f">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="260"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QDK-vk-8Ef">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Itc-FI-bne"/>
+                                    <barButtonItem title="Done" id="5vu-aq-He5">
+                                        <connections>
+                                            <action selector="done:" destination="Hj9-Nu-AA4" id="SsA-gJ-avh"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="3XC-cx-oSd">
+                                <rect key="frame" x="0.0" y="44" width="600" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="446384697.05641103">
+                                    <!--2015-02-23 11:44:57 +0000-->
+                                </date>
+                                <connections>
+                                    <action selector="datePickerDidChangeValue:" destination="Hj9-Nu-AA4" eventType="valueChanged" id="vM4-o8-362"/>
+                                </connections>
+                            </datePicker>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="3XC-cx-oSd" firstAttribute="top" secondItem="QDK-vk-8Ef" secondAttribute="bottom" id="DnL-VE-fuO"/>
+                            <constraint firstAttribute="trailing" secondItem="QDK-vk-8Ef" secondAttribute="trailing" id="PoI-6A-GjI"/>
+                            <constraint firstAttribute="trailing" secondItem="3XC-cx-oSd" secondAttribute="trailing" id="fA2-n4-2ax"/>
+                            <constraint firstItem="3XC-cx-oSd" firstAttribute="leading" secondItem="eMA-tH-g4f" secondAttribute="leading" id="i6M-Iw-Sl0"/>
+                            <constraint firstItem="QDK-vk-8Ef" firstAttribute="leading" secondItem="eMA-tH-g4f" secondAttribute="leading" id="nmS-XJ-UWT"/>
+                            <constraint firstItem="QDK-vk-8Ef" firstAttribute="top" secondItem="eMA-tH-g4f" secondAttribute="top" id="xii-fS-qoa"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="260"/>
+                    <connections>
+                        <outlet property="datePicker" destination="3XC-cx-oSd" id="QFo-Gc-NcE"/>
+                        <outlet property="toolbar" destination="QDK-vk-8Ef" id="x2t-qO-Kv7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9eU-D6-zAd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1416" y="161"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="bTo-cA-Hdd">
+            <objects>
+                <navigationController id="oO4-te-ymq" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KP1-KD-6N3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="7Mi-qa-DLC" kind="relationship" relationship="rootViewController" id="E3P-45-FAq"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3CE-78-JIX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-186" y="331"/>
+        </scene>
+        <!--Country Picker View Controller-->
+        <scene sceneID="aZL-UY-VIq">
+            <objects>
+                <viewController id="eOP-4B-4eL" customClass="CountryPickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jvm-bn-tTh"/>
+                        <viewControllerLayoutGuide type="bottom" id="sdL-GP-tnn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uXM-eh-ioc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="260"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UPA-Vg-h1c">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0QV-ls-BRQ"/>
+                                    <barButtonItem title="Done" id="2qB-HH-c7Z">
+                                        <connections>
+                                            <action selector="done:" destination="eOP-4B-4eL" id="kyN-q6-hLQ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u8O-DL-QKP">
+                                <rect key="frame" x="0.0" y="44" width="600" height="162"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="eOP-4B-4eL" id="Pgn-gb-3qB"/>
+                                    <outlet property="delegate" destination="eOP-4B-4eL" id="1ag-Ti-mT7"/>
+                                </connections>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="u8O-DL-QKP" firstAttribute="leading" secondItem="uXM-eh-ioc" secondAttribute="leading" id="7Sk-sm-8VP"/>
+                            <constraint firstItem="UPA-Vg-h1c" firstAttribute="top" secondItem="uXM-eh-ioc" secondAttribute="top" id="D2l-B9-UoK"/>
+                            <constraint firstAttribute="trailing" secondItem="u8O-DL-QKP" secondAttribute="trailing" id="ail-kQ-Ab4"/>
+                            <constraint firstItem="u8O-DL-QKP" firstAttribute="top" secondItem="UPA-Vg-h1c" secondAttribute="bottom" id="chv-GR-BFL"/>
+                            <constraint firstItem="UPA-Vg-h1c" firstAttribute="leading" secondItem="uXM-eh-ioc" secondAttribute="leading" id="u1q-WD-ULn"/>
+                            <constraint firstAttribute="trailing" secondItem="UPA-Vg-h1c" secondAttribute="trailing" id="wyI-im-YM1"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="260"/>
+                    <connections>
+                        <outlet property="pickerView" destination="u8O-DL-QKP" id="gwu-2h-W9b"/>
+                        <outlet property="toolbar" destination="UPA-Vg-h1c" id="2Be-gN-vRJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fba-J6-KrC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1416" y="501"/>
+        </scene>
+    </scenes>
+</document>
