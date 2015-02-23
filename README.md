@@ -82,3 +82,13 @@ Content controllers can access associated popin controller via `self.popinContro
 @end
 
 ```
+
+#### Storyboard
+
+Popin controller comes with a custom segue `PBPopinSegue` that you can use to wire controllers in Storyboard. You still have to dismiss controller manually in code though.
+
+Please take a look at demo app coming with this pod:
+
+```bash
+pod try PBPopinController
+```
