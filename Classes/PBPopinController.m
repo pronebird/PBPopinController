@@ -10,10 +10,10 @@
 #import "PBPopinContainerViewController.h"
 #import "UIViewController+PopinController.h"
 
-NSString* const PBPopinControllerWillAppearNotification = @"PopinControllerWillAppearNotification";
-NSString* const PopinControllerDidAppearNotification = @"PopinControllerDidAppearNotification";
-NSString* const PBPopinControllerWillDisappearNotification = @"PopinControllerWillDisappearNotification";
-NSString* const PBPopinControllerDidDisappearNotification = @"PopinControllerDidDisappearNotification";
+NSString* const PBPopinControllerWillAppearNotification = @"PBPopinControllerWillAppearNotification";
+NSString* const PBPopinControllerDidAppearNotification = @"PBPopinControllerDidAppearNotification";
+NSString* const PBPopinControllerWillDisappearNotification = @"PBPopinControllerWillDisappearNotification";
+NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerDidDisappearNotification";
 
 @interface UIViewController ()
 
@@ -113,7 +113,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PopinControllerDid
         [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self];
         
         [self.containerController setContentViewController:self.contentViewController animated:animated completion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:PopinControllerDidAppearNotification object:weakSelf];
+            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:weakSelf];
             
             if(completion) {
                 completion();

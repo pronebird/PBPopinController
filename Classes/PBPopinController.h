@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 extern NSString* const PBPopinControllerWillAppearNotification;
-extern NSString* const PopinControllerDidAppearNotification;
+extern NSString* const PBPopinControllerDidAppearNotification;
 extern NSString* const PBPopinControllerWillDisappearNotification;
 extern NSString* const PBPopinControllerDidDisappearNotification;
 
