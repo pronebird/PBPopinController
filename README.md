@@ -2,6 +2,8 @@
 
 Custom controller that pops from the bottom, exactly like keyboard.
 
+<img src="https://raw.githubusercontent.com/pronebird/PBPopinController/master/README%20Images/PopinController.gif" align="right" vspace="20" hspace="20">
+
 Features:
 
 1. Content controller support.
