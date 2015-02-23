@@ -11,8 +11,8 @@
 @interface UIViewController (PopinController)
 
 /**
- *  An instance of Popin controller
- *  Set on content view controller when popin presented
+ *  An instance of popin controller presenting this view controller
+ *  This property will be non-nil on content view controller when it is presented
  */
 @property (readonly, nonatomic) PBPopinController* popinController;
 
