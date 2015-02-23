@@ -41,7 +41,7 @@ pod 'PBPopinController'
 @implementation MyViewController
 
 - (IBAction)handleTapOnButton:(id)sender {
-    UIViewController* contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ContentVC"]
+    UIViewController* contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ContentVC"];
     [[PBPopinController sharedPopinController] presentWithContentViewController:contentViewController
                                                              fromViewController:self
                                                                        animated:YES
@@ -81,6 +81,23 @@ Content controllers can access associated popin controller via `self.popinContro
 
 @end
 
+```
+
+#### Content controller size
+
+By default PopinController will use half of screen to present your content controller. However you can change that by setting a desired `preferredContentSize` on your content view controller.
+
+I prefer to override `preferredContentSize`, for example:
+
+```objective-c
+- (CGSize)preferredContentSize {
+    CGSize preferredSize;
+    
+    preferredSize.width = CGRectGetWidth(self.view.bounds);
+    preferredSize.height = CGRectGetHeight(self.toolbar.bounds) + self.datePicker.intrinsicContentSize.height;
+    
+    return preferredSize;
+}
 ```
 
 #### Storyboard
