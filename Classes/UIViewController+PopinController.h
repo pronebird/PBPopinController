@@ -12,7 +12,7 @@
 
 /**
  *  An instance of popin controller presenting this view controller
- *  This property will be non-nil on content view controller when it is presented
+ *  This property is nil if controller is not presented
  */
 @property (readonly, nonatomic) PBPopinController* popinController;
 
