@@ -2,7 +2,7 @@
 
 Custom controller that pops from the bottom, exactly like keyboard.
 
-<img src="https://raw.githubusercontent.com/pronebird/PBPopinController/master/README%20Images/PopinController.gif" align="center" vspace="20" hspace="20">
+![GIF Image](https://raw.githubusercontent.com/pronebird/PBPopinController/master/README%20Images/PopinController.gif)
 
 Features:
 
