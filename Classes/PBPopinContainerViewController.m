@@ -25,30 +25,32 @@
 }
 
 - (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated completion:(void(^)(void))completion {
+    UIViewController* currentContentController = self.contentViewController;
+    
+    // set content controller to nil to dismiss presented one
     if(!contentViewController)
     {
-        [self _animateDismissal:animated completion:^{
-            [self _removeContentViewController];
-            self.contentViewController = nil;
+        self.contentViewController = nil;
+        
+        [self _dismissContentViewController:currentContentController animated:animated completion:^{
+            [self _removeContentViewController:currentContentController];
             
             if(completion) {
                 completion();
             }
         }];
     }
-    else if(!self.contentViewController)
+    else if(!currentContentController) // if there is currently no controller presented
     {
         self.contentViewController = contentViewController;
-        [self _addContentViewController];
-        
-        [self _animatePresentation:animated completion:completion];
+        [self _addContentViewController:contentViewController];
+        [self _presentContentViewController:contentViewController animated:animated completion:completion];
     }
-    else
+    else // replace current controller
     {
-        [self _removeContentViewController];
-        
         self.contentViewController = contentViewController;
-        [self _addContentViewController];
+        [self _removeContentViewController:currentContentController];
+        [self _addContentViewController:contentViewController];
         
         if(completion) {
             completion();
@@ -60,7 +62,7 @@
     [super viewDidLoad];
     
     if(self.contentViewController && self.contentViewController.parentViewController != self) {
-        [self _addContentViewController];
+        [self _addContentViewController:self.contentViewController];
     }
 }
 
@@ -68,18 +70,18 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.contentViewController.view.frame = [self _frameForContentController];
+        self.contentViewController.view.frame = [self _frameForContentController:self.contentViewController];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
 }
 
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
-    self.contentViewController.view.frame = [self _frameForContentController];
+    self.contentViewController.view.frame = [self _frameForContentController:self.contentViewController];
 }
 
 #pragma mark - Presentation animations
 
-- (CGRect)_frameForContentController {
-    CGSize preferredSize = [self.contentViewController preferredContentSize];
+- (CGRect)_frameForContentController:(UIViewController*)controller {
+    CGSize preferredSize = [controller preferredContentSize];
     if(CGSizeEqualToSize(preferredSize, CGSizeZero)) {
         preferredSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) * 0.5);
     }
@@ -87,8 +89,8 @@
     return CGRectMake(0, CGRectGetHeight(self.view.bounds) - preferredSize.height, preferredSize.width, preferredSize.height);
 }
 
-- (CGRect)_initialFrameForContentController {
-    CGRect rect = [self _frameForContentController];
+- (CGRect)_initialFrameForContentController:(UIViewController*)controller {
+    CGRect rect = [self _frameForContentController:controller];
     
     rect.origin.y = CGRectGetHeight(self.view.bounds);
     
@@ -99,22 +101,27 @@
     return 0.4;
 }
 
-- (void)_animatePresentation:(BOOL)animated completion:(void(^)(void))completion {
+- (UIViewAnimationOptions)_animationOptions {
+    return UIViewAnimationOptionCurveKeyboard | UIViewAnimationOptionBeginFromCurrentState;
+}
+
+- (void)_presentContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completion {
     void(^animations)(void) = ^{
-        self.contentViewController.view.frame = [self _frameForContentController];
+        controller.view.frame = [self _frameForContentController:controller];
     };
+    
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
         if(completion) {
             completion();
         }
     };
 
-    self.contentViewController.view.frame = [self _initialFrameForContentController];
+    controller.view.frame = [self _initialFrameForContentController:controller];
     
     if(animated) {
         [UIView animateWithDuration:[self _transitionDuration]
                               delay:0.0
-                            options:UIViewAnimationOptionCurveKeyboard
+                            options:[self _animationOptions]
                          animations:animations
                          completion:animationCompletion];
     } else {
@@ -123,10 +130,11 @@
     }
 }
 
-- (void)_animateDismissal:(BOOL)animated completion:(void(^)(void))completion {
+- (void)_dismissContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completion {
     void(^animations)(void) = ^{
-        self.contentViewController.view.frame = [self _initialFrameForContentController];
+        controller.view.frame = [self _initialFrameForContentController:controller];
     };
+    
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
         if(completion) {
             completion();
@@ -136,7 +144,7 @@
     if(animated) {
         [UIView animateWithDuration:[self _transitionDuration]
                               delay:0.0
-                            options:UIViewAnimationOptionCurveKeyboard
+                            options:[self _animationOptions]
                          animations:animations
                          completion:animationCompletion];
     } else {
@@ -147,19 +155,19 @@
 
 #pragma mark - Private
 
-- (void)_addContentViewController {
-    [self addChildViewController:self.contentViewController];
+- (void)_addContentViewController:(UIViewController*)controller {
+    [self addChildViewController:controller];
     
-    self.contentViewController.view.frame = [self _frameForContentController];
-    [self.view addSubview:self.contentViewController.view];
+    controller.view.frame = [self _frameForContentController:controller];
+    [self.view addSubview:controller.view];
     
-    [self.contentViewController didMoveToParentViewController:self];
+    [controller didMoveToParentViewController:self];
 }
 
-- (void)_removeContentViewController {
-    [self.contentViewController willMoveToParentViewController:nil];
-    [self.contentViewController.view removeFromSuperview];
-    [self.contentViewController removeFromParentViewController];
+- (void)_removeContentViewController:(UIViewController*)controller {
+    [controller willMoveToParentViewController:nil];
+    [controller.view removeFromSuperview];
+    [controller removeFromParentViewController];
 }
 
 @end

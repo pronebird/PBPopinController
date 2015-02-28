@@ -27,6 +27,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
 @property (weak, readwrite) UIViewController* sourceViewController;
 @property (readwrite) UIViewController* contentViewController;
 @property (readwrite) BOOL presented;
+@property (readwrite) BOOL beingPresented;
 
 @end
 
@@ -59,8 +60,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
 }
 
 - (void)dealloc {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
@@ -94,14 +93,17 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
         
-        [self.containerController setContentViewController:contentViewController animated:NO completion:nil];
-        
-        if(completion) {
-            completion();
-        }
+        [self.containerController setContentViewController:contentViewController animated:NO completion:^{
+            
+            if(completion) {
+                completion();
+            }
+        }];
     }
     else
     {
+        self.beingPresented = YES;
+        
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
         
@@ -114,7 +116,11 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self];
         
         [self.containerController setContentViewController:self.contentViewController animated:animated completion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:weakSelf];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            
+            strongSelf.beingPresented = NO;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
             
             if(completion) {
                 completion();
@@ -135,14 +141,18 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     [self.containerController setContentViewController:nil animated:animated completion:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        [strongSelf.class popinWindow].rootViewController = nil;
-        strongSelf.containerController = nil;
-        strongSelf.contentViewController.popinController = nil;
-        
-        [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-        [strongSelf _hidePopinWindow];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+        // it can happen that presentation is requested during dismissal
+        // in that case we should not do anything.
+        if(![strongSelf isBeingPresented]) {
+            [strongSelf.class popinWindow].rootViewController = nil;
+            strongSelf.containerController = nil;
+            strongSelf.contentViewController.popinController = nil;
+            
+            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+            [strongSelf _hidePopinWindow];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+        }
         
         if(completion) {
             completion();
@@ -163,7 +173,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
 
 - (void)_hidePopinWindow {
     [self.class popinWindow].hidden = YES;
-    [[self.class popinWindow] removeFromSuperview];
 }
 
 - (void)_addDismissOnScrollHandler:(UIViewController*)sourceViewController {
