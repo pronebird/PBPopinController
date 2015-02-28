@@ -81,9 +81,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     // assign popinController to content controller
     contentViewController.popinController = self;
     
-    // add dismiss on scroll handler
-    [self _addDismissOnScrollHandler:sourceViewController];
-    
     // Replace content view controller if controller is already presented
     if(self.presented)
     {
@@ -100,6 +97,10 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     }
     else
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self];
+        
+        self.presented = YES;
+        
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
         
@@ -109,17 +110,21 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         
         __weak typeof(self) weakSelf = self;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self];
-        
         [self.containerController setContentViewController:self.contentViewController animated:animated completion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:weakSelf];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            
+            // check if still presented
+            if(strongSelf.presented) {
+                // add dismiss on scroll handler
+                [strongSelf _addDismissOnScrollHandler:sourceViewController];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
+            }
             
             if(completion) {
                 completion();
             }
         }];
-        
-        self.presented = YES;
     }
 }
 
@@ -130,26 +135,28 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     
     [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self];
     
+    self.presented = NO;
+    [self _removeDismissOnScrollHandler];
+    
     [self.containerController setContentViewController:nil animated:animated completion:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        [strongSelf.class popinWindow].rootViewController = nil;
-        strongSelf.containerController = nil;
-        strongSelf.contentViewController.popinController = nil;
-        
-        [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-        [strongSelf _hidePopinWindow];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+        // check if still dismissed
+        if(!strongSelf.presented) {
+            [strongSelf.class popinWindow].rootViewController = nil;
+            strongSelf.containerController = nil;
+            strongSelf.contentViewController.popinController = nil;
+            
+            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+            [strongSelf _hidePopinWindow];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+        }
         
         if(completion) {
             completion();
         }
     }];
-    
-    [self _removeDismissOnScrollHandler];
-    
-    self.presented = NO;
 }
 
 #pragma mark - Private
