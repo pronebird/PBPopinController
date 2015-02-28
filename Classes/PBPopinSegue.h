@@ -10,6 +10,4 @@
 
 @interface PBPopinSegue : UIStoryboardSegue
 
-@property PBPopinController* popinController;
-
 @end
