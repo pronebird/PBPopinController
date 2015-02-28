@@ -26,14 +26,9 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
 @property (readonly) UIViewController* contentViewController;
 
 /**
- *  Whether popin is presented
+ *  Whether popin is currently presented
  */
-@property (readonly, getter=isPresented) BOOL presented;
-
-/**
- *  Whether popin is being presented
- */
-@property (readonly, getter=isBeingPresented) BOOL beingPresented;
+@property (readonly) BOOL presented;
 
 /**
  * Get shared instance of popin controller
