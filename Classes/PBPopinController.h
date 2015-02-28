@@ -9,52 +9,56 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  A notification sent before controller appears
+ *  A notification sent before controller appears.
  */
 extern NSString* const PBPopinControllerWillAppearNotification;
 
 /**
- *  A notification sent after controller appears
+ *  A notification sent after controller appears.
  */
 extern NSString* const PBPopinControllerDidAppearNotification;
 
 /**
- *  A notification sent before controller disappears
+ *  A notification sent before controller disappears.
  */
 extern NSString* const PBPopinControllerWillDisappearNotification;
 
 /**
- *  A notification sent after controller disappears
+ *  A notification sent after controller disappears.
  */
 extern NSString* const PBPopinControllerDidDisappearNotification;
 
 
+/**
+ *  @abstract Popin controller.
+ */
 @interface PBPopinController : NSObject
 
 /**
- *  A source view controller that requested presentation
+ *  @abstract A source view controller that requested presentation.
  */
 @property (weak, readonly) UIViewController* sourceViewController;
 
 /**
- *  A content view controller displayed in popin
+ *  A content view controller displayed in popin.
  */
 @property (readonly) UIViewController* contentViewController;
 
 /**
- *  Whether popin is currently presented
+ *  Indicates whether popin is presented.
  */
 @property (readonly) BOOL presented;
 
 /**
- * Get shared instance of popin controller
+ *  Get shared instance of popin controller.
  *
  *  @return an instance of PBPopinController
  */
 + (instancetype)sharedPopinController;
 
 /**
- *  Present popin controller
+ *  @abstract Present popin controller.
+ *  @discussion You can call present multiple times, this will replace child controller within presented popin controller.
  *
  *  @param presentedViewController a content controller that will be displayed in popin controller
  *  @param sourceViewController    a source view controller you request presentation from
@@ -67,7 +71,8 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
                               completion:(void(^)(void))completion;
 
 /**
- *  Dismiss popin controller
+ *  @abstract Dismiss popin controller.
+ *  @discussion Make sure you call it only if controller is presented.
  *
  *  @param animated   whether to animate transition
  *  @param completion a completion handler

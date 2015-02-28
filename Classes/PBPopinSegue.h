@@ -8,6 +8,9 @@
 #import <UIKit/UIKit.h>
 #import "PBPopinController.h"
 
+/**
+ *  Segue class that presents view controllers in pop-in view.
+ */
 @interface PBPopinSegue : UIStoryboardSegue
 
 @end

@@ -11,8 +11,8 @@
 @interface UIViewController (PopinController)
 
 /**
- *  An instance of popin controller presenting this view controller
- *  This property is nil if controller is not presented
+ *  @abstract An instance of popin controller presenting this view controller.
+ *  @discussion This property is nil if controller is not presented.
  */
 @property (readonly, nonatomic) PBPopinController* popinController;
 
