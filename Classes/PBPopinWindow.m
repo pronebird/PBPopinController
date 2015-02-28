@@ -11,9 +11,9 @@
 @implementation PBPopinWindow
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    PBPopinContainerViewController* popinContainerController = (PBPopinContainerViewController *)self.rootViewController;
+    PBPopinContainerViewController* container = (PBPopinContainerViewController *)self.rootViewController;
     
-    if(!CGRectContainsPoint(popinContainerController.contentViewController.view.frame, point)) {
+    if(!CGRectContainsPoint(container.contentViewController.view.frame, point)) {
         return NO;
     }
 
