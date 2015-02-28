@@ -8,10 +8,26 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+/**
+ *  A notification sent before controller appears
+ */
 extern NSString* const PBPopinControllerWillAppearNotification;
+
+/**
+ *  A notification sent after controller appears
+ */
 extern NSString* const PBPopinControllerDidAppearNotification;
+
+/**
+ *  A notification sent before controller disappears
+ */
 extern NSString* const PBPopinControllerWillDisappearNotification;
+
+/**
+ *  A notification sent after controller disappears
+ */
 extern NSString* const PBPopinControllerDidDisappearNotification;
+
 
 @interface PBPopinController : NSObject
 
