@@ -226,6 +226,12 @@
 
 #pragma mark - Private
 
+/**
+ *  Create new transition view and add it to view hierarchy.
+ *  @internal
+ *
+ *  @return an instance of _PBPopinTransitionView
+ */
 - (UIView*)_createTransitionView {
     UIView* transitionView = [[_PBPopinTransitionView alloc] initWithFrame:self.view.bounds];
     
@@ -234,6 +240,15 @@
     return transitionView;
 }
 
+/**
+ *  @abstract Calculate size for accessory view.
+ *  @discussion This method uses intrinsicContentSize to determine desired size for accessory view.
+ *  @internal
+ *
+ *  @param accessoryView an instance of accessory view
+ *
+ *  @return size of CGSizeZero
+ */
 - (CGSize)_sizeForAccessoryView:(UIView*)accessoryView {
     CGSize size = accessoryView.intrinsicContentSize;
     
@@ -242,6 +257,15 @@
     return size;
 }
 
+/**
+ *  @abstract Calculate size for content controller view.
+ *  @discussion This method uses intrinsicContentSize to determine desired size for accessory view.
+ *  @internal
+ *
+ *  @param accessoryView an instance of accessory view
+ *
+ *  @return size of CGSizeZero
+ */
 - (CGSize)_sizeForContentController:(UIViewController*)controller {
     CGSize preferredSize = [controller preferredContentSize];
     
@@ -254,6 +278,13 @@
     return preferredSize;
 }
 
+/**
+ *  Layout accessory and content views in transition view.
+ *  @internal
+ *
+ *  @param transitionView an instance of transitionView
+ *  @param controller     an associated content controller
+ */
 - (void)_layoutTransitionView:(UIView*)transitionView controller:(UIViewController*)controller {
     UIView* accessoryView = controller.popinAccessoryView;
     
@@ -274,6 +305,13 @@
     accessoryView.frame = accessoryRect;
 }
 
+/**
+ *  Add content view controller into view hierarchy.
+ *  @internal
+ *
+ *  @param controller     an instance of content view controller
+ *  @param transitionView an instance of transition view
+ */
 - (void)_addContentViewController:(UIViewController*)controller intoTransitionView:(UIView*)transitionView {
     UIView* accessoryView = controller.popinAccessoryView;
     
@@ -303,6 +341,13 @@
     [self _layoutTransitionView:transitionView controller:controller];
 }
 
+/**
+ *  Remove content view controller from view hierarchy.
+ *  @internal
+ *
+ *  @param controller     an instance of content view controller
+ *  @param transitionView an instance of transition view
+ */
 - (void)_removeContentViewController:(UIViewController*)controller fromTransitionView:(UIView*)transitionView {
     [controller willMoveToParentViewController:nil];
     [controller.view removeFromSuperview];
