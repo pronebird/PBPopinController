@@ -300,6 +300,13 @@
     [controller willMoveToParentViewController:nil];
     [controller.view removeFromSuperview];
     [controller removeFromParentViewController];
+    
+    // Edge case: same accessory can be reused
+    // Make sure we remove it from current transitionView
+    UIView* accessoryView = controller.popinAccessoryView;
+    if(accessoryView.superview == transitionView) {
+        [accessoryView removeFromSuperview];
+    }
 }
 
 @end
