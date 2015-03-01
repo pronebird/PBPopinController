@@ -7,7 +7,6 @@
 //
 
 #import "CountryPickerViewController.h"
-#import "UIViewController+PopinController.h"
 
 @interface CountryPickerViewController()
 
@@ -37,19 +36,9 @@
             [self.pickerView selectRow:index inComponent:0 animated:NO];
         }
     }
-}
-
-- (CGSize)preferredContentSize {
-    CGSize preferredSize;
     
-    preferredSize.width = CGRectGetWidth(self.view.bounds);
-    preferredSize.height = self.pickerView.intrinsicContentSize.height;
-    
-    return preferredSize;
-}
-
-- (IBAction)done:(id)sender {
-    [self.popinController dismissAnimated:YES completion:nil];
+    // setup preferred size for controller
+    self.preferredContentSize = self.pickerView.intrinsicContentSize;
 }
 
 #pragma mark - UIPickerViewDataSource
