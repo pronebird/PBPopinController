@@ -16,4 +16,10 @@
  */
 @property (readonly, nonatomic) PBPopinController* popinController;
 
+/**
+ *  @abstract Get or set accessory view for popin.
+ *  @discussion Accessory view is placed above content controller. It works the same way as inputAccessoryView on text fields.
+ */
+@property (nonatomic) UIView* popinAccessoryView;
+
 @end

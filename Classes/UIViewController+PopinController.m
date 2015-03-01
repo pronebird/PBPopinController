@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 
 const void* PopinControllerKey = &PopinControllerKey;
+const void* PopinAccessoryViewKey = &PopinAccessoryViewKey;
 
 @implementation UIViewController (PopinController)
 
@@ -19,6 +20,14 @@ const void* PopinControllerKey = &PopinControllerKey;
 
 - (void)setPopinController:(PBPopinController*)popinController {
     objc_setAssociatedObject(self, PopinControllerKey, popinController, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (UIView*)popinAccessoryView {
+    return objc_getAssociatedObject(self, PopinAccessoryViewKey);
+}
+
+- (void)setPopinAccessoryView:(UIView *)popinAccessoryView {
+    objc_setAssociatedObject(self, PopinAccessoryViewKey, popinAccessoryView, OBJC_ASSOCIATION_RETAIN);
 }
 
 @end
