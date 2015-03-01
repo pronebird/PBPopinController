@@ -44,11 +44,11 @@
 }
 
 - (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated completion:(void(^)(void))completion {
-    UIViewController* currentContentController = self.contentViewController;
+    UIViewController* presentedContentController = self.contentViewController;
     UIView* transitionView = self.transitionView;
     
     // check if equal
-    if(contentViewController == currentContentController) {
+    if(contentViewController == presentedContentController) {
         if(completion) {
             completion();
         }
@@ -63,12 +63,12 @@
         self.contentViewController = nil;
         self.transitionView = nil;
         
-        [self _dismissContentViewController:currentContentController
+        [self _dismissContentViewController:presentedContentController
                              transitionView:transitionView
                                    animated:animated
                                  completion:^{
                                      // remove content view controller
-                                     [self _removeContentViewController:currentContentController
+                                     [self _removeContentViewController:presentedContentController
                                                      fromTransitionView:transitionView];
                                      
                                      // remove transition view
@@ -79,7 +79,7 @@
                                      }
                                  }];
     }
-    else if(!currentContentController) // if there is currently no controller presented
+    else if(!presentedContentController) // if there is currently no controller presented
     {
         NSParameterAssert(transitionView == nil);
         
@@ -98,7 +98,7 @@
         
         self.contentViewController = contentViewController;
         
-        [self _removeContentViewController:currentContentController fromTransitionView:transitionView];
+        [self _removeContentViewController:presentedContentController fromTransitionView:transitionView];
         [self _addContentViewController:contentViewController intoTransitionView:transitionView];
         
         if(completion) {
