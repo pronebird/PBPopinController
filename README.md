@@ -88,7 +88,7 @@ By default PopinController will use half of screen to present your content contr
 
 #### Accessory view
 
-You can provide an accessory view to popin controller which is placed above pop-in controller. Popin controller uses `intrinsicContentSize` to calculate size for accessory view.
+You can provide an accessory view to popin controller which is placed above content view. Popin controller uses `intrinsicContentSize` to calculate size for accessory view.
 
 Make sure you do not share the same accessory view with keyboard or any other view since it may lead to crash, e.g. keyboard explicitly checks for that and raises exception.
 
