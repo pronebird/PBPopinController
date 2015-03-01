@@ -276,6 +276,13 @@
 
 - (void)_addContentViewController:(UIViewController*)controller intoTransitionView:(UIView*)transitionView {
     UIView* accessoryView = controller.popinAccessoryView;
+    
+    // sharing the same accessory between popin controllers is ok,
+    // but keyboard will throw an exception or mess view hierarchy.
+    if(accessoryView.superview && ![accessoryView.superview isKindOfClass:_PBPopinTransitionView.class]) {
+        [NSException raise:@"PBPopinContainerViewControllerHierarchyInconsistencyException"
+                    format:@"Popin accessory view must not be in view hierarchy. Please create an individual instance of accessory view."];
+    }
 
     [self addChildViewController:controller];
     [transitionView addSubview:controller.view];
@@ -302,7 +309,7 @@
     [controller removeFromParentViewController];
     
     // Edge case: same accessory can be reused
-    // Make sure we remove it from current transitionView
+    // Make sure we remove it from current transition view only
     UIView* accessoryView = controller.popinAccessoryView;
     if(accessoryView.superview == transitionView) {
         [accessoryView removeFromSuperview];
