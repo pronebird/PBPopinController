@@ -15,11 +15,6 @@
 @property (readonly) UIViewController* contentViewController;
 
 /**
- *  Current popin accessory view.
- */
-@property (readonly) UIView* accessoryView;
-
-/**
  *  Designated initializer
  *
  *  @param contentViewController an instance of content view controller or nil
