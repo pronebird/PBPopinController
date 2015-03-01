@@ -21,6 +21,12 @@
     self.preferredContentSize = self.datePicker.intrinsicContentSize;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    self.preferredContentSize = self.datePicker.intrinsicContentSize;
+}
+
 - (void)setCurrentDate:(NSDate *)currentDate {
     if(![_currentDate isEqualToDate:currentDate]) {
         _currentDate = currentDate;
