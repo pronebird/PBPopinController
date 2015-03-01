@@ -6,7 +6,6 @@
 //
 
 #import "PBPopinController.h"
-#import "PBPopinWindow.h"
 #import "PBPopinContainerViewController.h"
 #import "UIViewController+PopinController.h"
 
@@ -14,6 +13,24 @@ NSString* const PBPopinControllerWillAppearNotification = @"PBPopinControllerWil
 NSString* const PBPopinControllerDidAppearNotification = @"PBPopinControllerDidAppearNotification";
 NSString* const PBPopinControllerWillDisappearNotification = @"PBPopinControllerWillDisappearNotification";
 NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerDidDisappearNotification";
+
+@interface _PBPopinWindow : UIWindow
+@end
+
+@implementation _PBPopinWindow
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    PBPopinContainerViewController* container = (PBPopinContainerViewController *)self.rootViewController;
+    UIView* transitionView = container.contentViewController.view.superview;
+    
+    if(!CGRectContainsPoint(transitionView.frame, point)) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+@end
 
 @interface UIViewController ()
 
@@ -41,11 +58,11 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     return popinController;
 }
 
-+ (PBPopinWindow*)popinWindow {
-    static PBPopinWindow* popinWindow;
++ (_PBPopinWindow*)popinWindow {
+    static _PBPopinWindow* popinWindow;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        popinWindow = [[PBPopinWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        popinWindow = [[_PBPopinWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         popinWindow.backgroundColor = [UIColor clearColor];
     });
     return popinWindow;

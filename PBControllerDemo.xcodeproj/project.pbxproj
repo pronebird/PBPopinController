@@ -16,7 +16,6 @@
 		58B9650E1A9B489F00C8E8AD /* PBPopinContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B965051A9B489F00C8E8AD /* PBPopinContainerViewController.m */; };
 		58B9650F1A9B489F00C8E8AD /* PBPopinController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B965071A9B489F00C8E8AD /* PBPopinController.m */; };
 		58B965101A9B489F00C8E8AD /* PBPopinSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B965091A9B489F00C8E8AD /* PBPopinSegue.m */; };
-		58B965111A9B489F00C8E8AD /* PBPopinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B9650B1A9B489F00C8E8AD /* PBPopinWindow.m */; };
 		58B965121A9B489F00C8E8AD /* UIViewController+PopinController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B9650D1A9B489F00C8E8AD /* UIViewController+PopinController.m */; };
 		58B965161A9B4AF200C8E8AD /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B965151A9B4AF200C8E8AD /* DatePickerViewController.m */; };
 		58B965191A9B4B5900C8E8AD /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B965181A9B4B5900C8E8AD /* TableViewController.m */; };
@@ -51,8 +50,6 @@
 		58B965071A9B489F00C8E8AD /* PBPopinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBPopinController.m; path = Classes/PBPopinController.m; sourceTree = SOURCE_ROOT; };
 		58B965081A9B489F00C8E8AD /* PBPopinSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PBPopinSegue.h; path = Classes/PBPopinSegue.h; sourceTree = SOURCE_ROOT; };
 		58B965091A9B489F00C8E8AD /* PBPopinSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBPopinSegue.m; path = Classes/PBPopinSegue.m; sourceTree = SOURCE_ROOT; };
-		58B9650A1A9B489F00C8E8AD /* PBPopinWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PBPopinWindow.h; path = Classes/PBPopinWindow.h; sourceTree = SOURCE_ROOT; };
-		58B9650B1A9B489F00C8E8AD /* PBPopinWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBPopinWindow.m; path = Classes/PBPopinWindow.m; sourceTree = SOURCE_ROOT; };
 		58B9650C1A9B489F00C8E8AD /* UIViewController+PopinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+PopinController.h"; path = "Classes/UIViewController+PopinController.h"; sourceTree = SOURCE_ROOT; };
 		58B9650D1A9B489F00C8E8AD /* UIViewController+PopinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+PopinController.m"; path = "Classes/UIViewController+PopinController.m"; sourceTree = SOURCE_ROOT; };
 		58B965141A9B4AF200C8E8AD /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
@@ -154,8 +151,6 @@
 				58B965071A9B489F00C8E8AD /* PBPopinController.m */,
 				58B965081A9B489F00C8E8AD /* PBPopinSegue.h */,
 				58B965091A9B489F00C8E8AD /* PBPopinSegue.m */,
-				58B9650A1A9B489F00C8E8AD /* PBPopinWindow.h */,
-				58B9650B1A9B489F00C8E8AD /* PBPopinWindow.m */,
 				58B9650C1A9B489F00C8E8AD /* UIViewController+PopinController.h */,
 				58B9650D1A9B489F00C8E8AD /* UIViewController+PopinController.m */,
 			);
@@ -268,7 +263,6 @@
 				58B965121A9B489F00C8E8AD /* UIViewController+PopinController.m in Sources */,
 				58B9650F1A9B489F00C8E8AD /* PBPopinController.m in Sources */,
 				58B965191A9B4B5900C8E8AD /* TableViewController.m in Sources */,
-				58B965111A9B489F00C8E8AD /* PBPopinWindow.m in Sources */,
 				58B9650E1A9B489F00C8E8AD /* PBPopinContainerViewController.m in Sources */,
 				58B965161A9B4AF200C8E8AD /* DatePickerViewController.m in Sources */,
 				58B964E11A9B485C00C8E8AD /* main.m in Sources */,

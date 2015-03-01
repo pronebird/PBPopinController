@@ -9,7 +9,15 @@
 
 @interface PBPopinContainerViewController : UIViewController
 
+/**
+ *  Current content controller.
+ */
 @property (readonly) UIViewController* contentViewController;
+
+/**
+ *  Current popin accessory view.
+ */
+@property (readonly) UIView* accessoryView;
 
 /**
  *  Designated initializer

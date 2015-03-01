@@ -6,16 +6,35 @@
 //
 
 #import "PBPopinContainerViewController.h"
+#import "UIViewController+PopinController.h"
 
 #define UIViewAnimationOptionCurveKeyboard 7 << 16
 
+// Marker classes for debugging purposes
+@interface _PBPopinTransitionView : UIView @end
+@implementation _PBPopinTransitionView @end
+@interface _PBPopinContainerView : UIView @end
+@implementation _PBPopinContainerView @end
+
 @interface PBPopinContainerViewController ()
 
+/**
+ *  Current content controller.
+ */
 @property (readwrite) UIViewController* contentViewController;
+
+/**
+ *  This view is used for animations and contains accessory view and content view.
+ */
+@property UIView* transitionView;
 
 @end
 
 @implementation PBPopinContainerViewController
+
+- (void)loadView {
+    self.view = [[_PBPopinContainerView alloc] initWithFrame:CGRectZero];
+}
 
 - (instancetype)initWithContentViewController:(UIViewController*)contentViewController {
     if(self = [super init]) {
@@ -26,31 +45,61 @@
 
 - (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated completion:(void(^)(void))completion {
     UIViewController* currentContentController = self.contentViewController;
+    UIView* transitionView = self.transitionView;
+    
+    // check if equal
+    if(contentViewController == currentContentController) {
+        if(completion) {
+            completion();
+        }
+        return;
+    }
     
     // set content controller to nil to dismiss presented one
     if(!contentViewController)
     {
-        self.contentViewController = nil;
+        NSParameterAssert(transitionView);
         
-        [self _dismissContentViewController:currentContentController animated:animated completion:^{
-            [self _removeContentViewController:currentContentController];
-            
-            if(completion) {
-                completion();
-            }
-        }];
+        self.contentViewController = nil;
+        self.transitionView = nil;
+        
+        [self _dismissContentViewController:currentContentController
+                             transitionView:transitionView
+                                   animated:animated
+                                 completion:^{
+                                     // remove content view controller
+                                     [self _removeContentViewController:currentContentController
+                                                     fromTransitionView:transitionView];
+                                     
+                                     // remove transition view
+                                     [transitionView removeFromSuperview];
+                                     
+                                     if(completion) {
+                                         completion();
+                                     }
+                                 }];
     }
     else if(!currentContentController) // if there is currently no controller presented
     {
+        NSParameterAssert(transitionView == nil);
+        
         self.contentViewController = contentViewController;
-        [self _addContentViewController:contentViewController];
-        [self _presentContentViewController:contentViewController animated:animated completion:completion];
+        self.transitionView = [self _createTransitionView];
+        
+        [self _addContentViewController:contentViewController intoTransitionView:self.transitionView];
+        [self _presentContentViewController:contentViewController
+                             transitionView:self.transitionView
+                                   animated:animated
+                                 completion:completion];
     }
     else // replace current controller
     {
+        NSParameterAssert(transitionView);
+        
         self.contentViewController = contentViewController;
-        [self _removeContentViewController:currentContentController];
-        [self _addContentViewController:contentViewController];
+        
+        [self _removeContentViewController:currentContentController fromTransitionView:transitionView];
+        [self _addContentViewController:contentViewController intoTransitionView:transitionView];
         
         if(completion) {
             completion();
@@ -61,8 +110,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // add content controller if not in hierarchy yet
     if(self.contentViewController && self.contentViewController.parentViewController != self) {
-        [self _addContentViewController:self.contentViewController];
+        self.transitionView = [self _createTransitionView];
+        
+        [self _addContentViewController:self.contentViewController intoTransitionView:self.transitionView];
     }
 }
 
@@ -70,31 +122,40 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        self.contentViewController.view.frame = [self _frameForContentController:self.contentViewController];
+        [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
 }
 
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
-    self.contentViewController.view.frame = [self _frameForContentController:self.contentViewController];
+    [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
 }
 
 #pragma mark - Presentation animations
 
-- (CGRect)_frameForContentController:(UIViewController*)controller {
-    CGSize preferredSize = [controller preferredContentSize];
-    if(CGSizeEqualToSize(preferredSize, CGSizeZero)) {
-        preferredSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) * 0.5);
-    }
+- (CGRect)_finalFrameForTransitionView:(UIViewController*)controller {
+    CGRect transitionRect;
+    UIView* accessoryView = controller.popinAccessoryView;
     
-    return CGRectMake(0, CGRectGetHeight(self.view.bounds) - preferredSize.height, preferredSize.width, preferredSize.height);
+    transitionRect.size = [self _sizeForContentController:controller];
+    transitionRect.origin.x = 0;
+    transitionRect.origin.y = CGRectGetHeight(self.view.bounds) - transitionRect.size.height;
+    
+    if(accessoryView) {
+        CGSize accessorySize = [self _sizeForAccessoryView:accessoryView];
+        
+        transitionRect.origin.y -= accessorySize.height;
+        transitionRect.size.height += accessorySize.height;
+    }
+
+    return transitionRect;
 }
 
-- (CGRect)_initialFrameForContentController:(UIViewController*)controller {
-    CGRect rect = [self _frameForContentController:controller];
+- (CGRect)_initialFrameForTransitionView:(UIViewController*)controller {
+    CGRect transitionRect = [self _finalFrameForTransitionView:controller];
     
-    rect.origin.y = CGRectGetHeight(self.view.bounds);
+    transitionRect.origin.y = CGRectGetHeight(self.view.bounds);
     
-    return rect;
+    return transitionRect;
 }
 
 - (NSTimeInterval)_transitionDuration {
@@ -105,9 +166,15 @@
     return UIViewAnimationOptionCurveKeyboard | UIViewAnimationOptionBeginFromCurrentState;
 }
 
-- (void)_presentContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completion {
+- (void)_presentContentViewController:(UIViewController*)controller
+                       transitionView:(UIView*)transitionView
+                             animated:(BOOL)animated
+                           completion:(void(^)(void))completion
+{
+    NSParameterAssert(transitionView);
+    
     void(^animations)(void) = ^{
-        controller.view.frame = [self _frameForContentController:controller];
+        transitionView.frame = [self _finalFrameForTransitionView:controller];
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
@@ -116,7 +183,7 @@
         }
     };
 
-    controller.view.frame = [self _initialFrameForContentController:controller];
+    transitionView.frame = [self _initialFrameForTransitionView:controller];
     
     if(animated) {
         [UIView animateWithDuration:[self _transitionDuration]
@@ -130,9 +197,13 @@
     }
 }
 
-- (void)_dismissContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completion {
+- (void)_dismissContentViewController:(UIViewController*)controller
+                       transitionView:(UIView*)transitionView
+                             animated:(BOOL)animated
+                           completion:(void(^)(void))completion
+{
     void(^animations)(void) = ^{
-        controller.view.frame = [self _initialFrameForContentController:controller];
+       transitionView.frame = [self _initialFrameForTransitionView:controller];
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
@@ -155,16 +226,77 @@
 
 #pragma mark - Private
 
-- (void)_addContentViewController:(UIViewController*)controller {
-    [self addChildViewController:controller];
+- (UIView*)_createTransitionView {
+    UIView* transitionView = [[_PBPopinTransitionView alloc] initWithFrame:self.view.bounds];
     
-    controller.view.frame = [self _frameForContentController:controller];
-    [self.view addSubview:controller.view];
+    [self.view addSubview:transitionView];
     
-    [controller didMoveToParentViewController:self];
+    return transitionView;
 }
 
-- (void)_removeContentViewController:(UIViewController*)controller {
+- (CGSize)_sizeForAccessoryView:(UIView*)accessoryView {
+    CGSize size = accessoryView.intrinsicContentSize;
+    
+    size.width = CGRectGetWidth(self.view.bounds);
+    
+    return size;
+}
+
+- (CGSize)_sizeForContentController:(UIViewController*)controller {
+    CGSize preferredSize = [controller preferredContentSize];
+    
+    if(CGSizeEqualToSize(preferredSize, CGSizeZero)) {
+        preferredSize = CGSizeMake(0, CGRectGetHeight(self.view.bounds) * 0.5);
+    }
+    
+    preferredSize.width = CGRectGetWidth(self.view.bounds);
+    
+    return preferredSize;
+}
+
+- (void)_layoutTransitionView:(UIView*)transitionView controller:(UIViewController*)controller {
+    UIView* accessoryView = controller.popinAccessoryView;
+    
+    CGSize accessorySize = [self _sizeForAccessoryView:accessoryView];
+    CGSize contentSize = [self _sizeForContentController:controller];
+    CGRect accessoryRect;
+    CGRect contentRect;
+    
+    accessoryRect.origin = CGPointZero;
+    accessoryRect.size = accessorySize;
+
+    contentRect.origin = CGPointMake(0, accessorySize.height);
+    contentRect.size = contentSize;
+    
+    transitionView.frame = [self _finalFrameForTransitionView:controller];
+    
+    controller.view.frame = contentRect;
+    accessoryView.frame = accessoryRect;
+}
+
+- (void)_addContentViewController:(UIViewController*)controller intoTransitionView:(UIView*)transitionView {
+    UIView* accessoryView = controller.popinAccessoryView;
+
+    [self addChildViewController:controller];
+    [transitionView addSubview:controller.view];
+    [controller didMoveToParentViewController:self];
+    
+    if(accessoryView) {
+        // remove all constraints
+        if(accessoryView.constraints.count) {
+            [accessoryView removeConstraints:accessoryView.constraints];
+        }
+        
+        accessoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        accessoryView.translatesAutoresizingMaskIntoConstraints = YES;
+        
+        [transitionView addSubview:accessoryView];
+    }
+    
+    [self _layoutTransitionView:transitionView controller:controller];
+}
+
+- (void)_removeContentViewController:(UIViewController*)controller fromTransitionView:(UIView*)transitionView {
     [controller willMoveToParentViewController:nil];
     [controller.view removeFromSuperview];
     [controller removeFromParentViewController];
