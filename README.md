@@ -16,9 +16,8 @@ Custom controller that pops from the bottom, exactly like keyboard.
 
 #### Known issues
 
-1. May get stuck when presented and dismissed too fast. Race condition.
-2. Unwinding does not work. Manually dismiss controller.
-3. Does not dismiss itself if presenting controller dismissed. Dismiss manually.
+1. Unwinding does not work. Manually dismiss controller.
+2. Does not dismiss itself if presenting controller dismissed. Dismiss manually.
 
 All contributions, PRs, comments are welcome!
 
@@ -86,17 +85,30 @@ Content controllers can access associated popin controller via `self.popinContro
 
 By default PopinController will use half of screen to present your content controller. However you can change that by setting a desired `preferredContentSize` on your content view controller.
 
-It's not the best option, but the easiest to override `preferredContentSize`, for example:
+#### Accessory view
 
-```objective-c
-- (CGSize)preferredContentSize {
-    CGSize preferredSize;
-    
-    preferredSize.width = CGRectGetWidth(self.view.bounds);
-    preferredSize.height = CGRectGetHeight(self.toolbar.bounds) + self.datePicker.intrinsicContentSize.height;
-    
-    return preferredSize;
-}
+You can provide an accessory view to popin controller which is placed above pop-in controller. Popin controller uses `intrinsicContentSize` to calculate size for accessory view.
+
+Make sure you do not share the same accessory view with keyboard or any other view since it may lead to crash, e.g. keyboard explicitly checks for that and raises exception.
+
+Although pop-in controller handles this properly when the same accessory view is shared between pop-in presentations.
+
+```objc
+// setup toolbar accessory view
+UIToolbar* accessory = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+accessory.items = @[ /* ... */ ];
+
+// create content controller
+UIViewController* contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ContentVC"];
+
+// assign accessory view
+contentViewController.popinAccessoryView = accessory;
+
+// present pop-in controller
+[[PBPopinController sharedPopinController] presentWithContentViewController:contentViewController
+                                                         fromViewController:self
+                                                                   animated:YES
+                                                                 completion:nil];
 ```
 
 #### Storyboard
