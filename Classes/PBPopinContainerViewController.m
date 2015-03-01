@@ -121,12 +121,16 @@
 #pragma mark - Content size changes
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
 }
 
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    [super preferredContentSizeDidChangeForChildContentContainer:container];
+    
     [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
 }
 
