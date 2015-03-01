@@ -13,17 +13,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if(self.initialDate) {
-        self.datePicker.date = self.initialDate;
+    if(self.currentDate) {
+        self.datePicker.date = self.currentDate;
     }
     
     // setup preferred size for controller
     self.preferredContentSize = self.datePicker.intrinsicContentSize;
 }
 
+- (void)setCurrentDate:(NSDate *)currentDate {
+    if(![_currentDate isEqualToDate:currentDate]) {
+        _currentDate = currentDate;
+        [self.datePicker setDate:currentDate animated:YES];
+    }
+}
+
 - (IBAction)datePickerDidChangeValue:(id)sender {
+    self.currentDate = self.datePicker.date;
+    
     if(self.didChangeDate) {
-        self.didChangeDate(self.datePicker.date);
+        self.didChangeDate(self.currentDate);
     }
 }
 

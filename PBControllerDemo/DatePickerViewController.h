@@ -12,7 +12,7 @@
 
 @property (weak) IBOutlet UIDatePicker* datePicker;
 
-@property NSDate* initialDate;
+@property (nonatomic) NSDate* currentDate;
 
 @property (copy) void(^didChangeDate)(NSDate* date);
 

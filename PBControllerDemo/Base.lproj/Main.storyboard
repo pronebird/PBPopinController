@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6735"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Pop-in controller demo-->
         <scene sceneID="qrH-Jf-tYu">
             <objects>
                 <tableViewController id="7Mi-qa-DLC" customClass="TableViewController" sceneMemberID="viewController">
@@ -84,21 +84,42 @@
                             <outlet property="delegate" destination="7Mi-qa-DLC" id="GnE-b5-mUA"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="GGU-Af-VDI"/>
+                    <navigationItem key="navigationItem" title="Pop-in controller demo" id="GGU-Af-VDI"/>
                     <connections>
                         <outlet property="countryLabel" destination="yKw-NZ-XeG" id="9oM-1z-rt4"/>
                         <outlet property="dateLabel" destination="ksd-hb-rZf" id="e43-cO-w68"/>
+                        <outlet property="keyboardAccessory" destination="e5j-1N-nMV" id="SbQ-WR-aWm"/>
                         <outlet property="popinAccessory" destination="gJF-1L-V2m" id="hTX-Sb-cge"/>
                         <outlet property="textField" destination="0ul-Yk-nrV" id="d57-o5-Kbd"/>
+                        <outlet property="todayAccessoryItem" destination="hG0-Iv-wCF" id="VWP-kd-viE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="clk-Kd-5gR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gJF-1L-V2m">
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="e5j-1N-nMV" userLabel="Keyboard accessory view">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="MG4-fs-rsM"/>
+                        <barButtonItem title="Done" id="MKE-ru-XYr">
+                            <connections>
+                                <action selector="done:" destination="7Mi-qa-DLC" id="Mrv-Rh-Qr0"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gJF-1L-V2m" userLabel="Pop-in accessory view">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="FQX-s6-apE"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="dvU-K5-lKk"/>
-                        <barButtonItem title="Done" id="0N1-cp-LAU">
+                        <barButtonItem title="Today" id="hG0-Iv-wCF">
+                            <connections>
+                                <action selector="today:" destination="7Mi-qa-DLC" id="c0b-sB-46m"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="WoA-J1-sZa"/>
+                        <barButtonItem title="Done" width="42" id="0N1-cp-LAU">
                             <connections>
                                 <action selector="done:" destination="7Mi-qa-DLC" id="DbV-RH-PC9"/>
                             </connections>

@@ -13,6 +13,8 @@
 @property (weak) IBOutlet UILabel* dateLabel;
 @property (weak) IBOutlet UILabel* countryLabel;
 @property (weak) IBOutlet UITextField* textField;
+@property (weak) IBOutlet UIToolbar* keyboardAccessory;
+@property (strong) IBOutlet UIBarButtonItem* todayAccessoryItem;
 @property (weak) IBOutlet UIToolbar* popinAccessory;
 
 @property NSDate* selectedDate;
