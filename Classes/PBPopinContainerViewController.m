@@ -251,7 +251,7 @@
  *
  *  @param accessoryView an instance of accessory view
  *
- *  @return size of CGSizeZero
+ *  @return accessory view size or CGSizeZero
  */
 - (CGSize)_sizeForAccessoryView:(UIView*)accessoryView {
     CGSize size = accessoryView.intrinsicContentSize;
@@ -263,12 +263,12 @@
 
 /**
  *  @abstract Calculate size for content controller view.
- *  @discussion This method uses intrinsicContentSize to determine desired size for accessory view.
+ *  @discussion This method uses preferredContentSize to determine desired size for content controller.
  *  @internal
  *
- *  @param accessoryView an instance of accessory view
+ *  @param controller a content controller
  *
- *  @return size of CGSizeZero
+ *  @return content controller size
  */
 - (CGSize)_sizeForContentController:(UIViewController*)controller {
     CGSize preferredSize = [controller preferredContentSize];
