@@ -43,7 +43,7 @@
     CGSize preferredSize;
     
     preferredSize.width = CGRectGetWidth(self.view.bounds);
-    preferredSize.height = CGRectGetHeight(self.toolbar.bounds) + self.pickerView.intrinsicContentSize.height;
+    preferredSize.height = self.pickerView.intrinsicContentSize.height;
     
     return preferredSize;
 }

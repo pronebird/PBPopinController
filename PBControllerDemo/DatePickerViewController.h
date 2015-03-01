@@ -10,7 +10,6 @@
 
 @interface DatePickerViewController : UIViewController
 
-@property (weak) IBOutlet UIToolbar* toolbar;
 @property (weak) IBOutlet UIDatePicker* datePicker;
 
 @property NSDate* initialDate;

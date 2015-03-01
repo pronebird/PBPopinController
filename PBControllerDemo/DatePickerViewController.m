@@ -23,7 +23,7 @@
     CGSize preferredSize;
     
     preferredSize.width = CGRectGetWidth(self.view.bounds);
-    preferredSize.height = CGRectGetHeight(self.toolbar.bounds) + self.datePicker.intrinsicContentSize.height;
+    preferredSize.height = self.datePicker.intrinsicContentSize.height;
     
     return preferredSize;
 }

@@ -10,7 +10,6 @@
 
 @interface CountryPickerViewController : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate>
 
-@property (weak) IBOutlet UIToolbar* toolbar;
 @property (weak) IBOutlet UIPickerView* pickerView;
 
 @property NSString* initialCountry;
