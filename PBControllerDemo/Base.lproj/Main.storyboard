@@ -88,9 +88,23 @@
                     <connections>
                         <outlet property="countryLabel" destination="yKw-NZ-XeG" id="9oM-1z-rt4"/>
                         <outlet property="dateLabel" destination="ksd-hb-rZf" id="e43-cO-w68"/>
+                        <outlet property="popinAccessory" destination="gJF-1L-V2m" id="hTX-Sb-cge"/>
+                        <outlet property="textField" destination="0ul-Yk-nrV" id="d57-o5-Kbd"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="clk-Kd-5gR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gJF-1L-V2m">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="dvU-K5-lKk"/>
+                        <barButtonItem title="Done" id="0N1-cp-LAU">
+                            <connections>
+                                <action selector="done:" destination="7Mi-qa-DLC" id="DbV-RH-PC9"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </objects>
             <point key="canvasLocation" x="634" y="331"/>
         </scene>
@@ -103,22 +117,11 @@
                         <viewControllerLayoutGuide type="bottom" id="PQP-1Y-dCV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="eMA-tH-g4f">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="260"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QDK-vk-8Ef">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Itc-FI-bne"/>
-                                    <barButtonItem title="Done" id="5vu-aq-He5">
-                                        <connections>
-                                            <action selector="done:" destination="Hj9-Nu-AA4" id="SsA-gJ-avh"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="3XC-cx-oSd">
-                                <rect key="frame" x="0.0" y="44" width="600" height="162"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="162"/>
                                 <date key="date" timeIntervalSinceReferenceDate="446384697.05641103">
                                     <!--2015-02-23 11:44:57 +0000-->
                                 </date>
@@ -129,19 +132,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="3XC-cx-oSd" firstAttribute="top" secondItem="QDK-vk-8Ef" secondAttribute="bottom" id="DnL-VE-fuO"/>
-                            <constraint firstAttribute="trailing" secondItem="QDK-vk-8Ef" secondAttribute="trailing" id="PoI-6A-GjI"/>
+                            <constraint firstItem="3XC-cx-oSd" firstAttribute="top" secondItem="eMA-tH-g4f" secondAttribute="top" id="c2O-Tb-0w8"/>
                             <constraint firstAttribute="trailing" secondItem="3XC-cx-oSd" secondAttribute="trailing" id="fA2-n4-2ax"/>
                             <constraint firstItem="3XC-cx-oSd" firstAttribute="leading" secondItem="eMA-tH-g4f" secondAttribute="leading" id="i6M-Iw-Sl0"/>
-                            <constraint firstItem="QDK-vk-8Ef" firstAttribute="leading" secondItem="eMA-tH-g4f" secondAttribute="leading" id="nmS-XJ-UWT"/>
-                            <constraint firstItem="QDK-vk-8Ef" firstAttribute="top" secondItem="eMA-tH-g4f" secondAttribute="top" id="xii-fS-qoa"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="600" height="260"/>
+                    <size key="freeformSize" width="600" height="216"/>
                     <connections>
                         <outlet property="datePicker" destination="3XC-cx-oSd" id="QFo-Gc-NcE"/>
-                        <outlet property="toolbar" destination="QDK-vk-8Ef" id="x2t-qO-Kv7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9eU-D6-zAd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -173,22 +172,11 @@
                         <viewControllerLayoutGuide type="bottom" id="sdL-GP-tnn"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uXM-eh-ioc">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="260"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UPA-Vg-h1c">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0QV-ls-BRQ"/>
-                                    <barButtonItem title="Done" id="2qB-HH-c7Z">
-                                        <connections>
-                                            <action selector="done:" destination="eOP-4B-4eL" id="kyN-q6-hLQ"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u8O-DL-QKP">
-                                <rect key="frame" x="0.0" y="44" width="600" height="162"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="162"/>
                                 <connections>
                                     <outlet property="dataSource" destination="eOP-4B-4eL" id="Pgn-gb-3qB"/>
                                     <outlet property="delegate" destination="eOP-4B-4eL" id="1ag-Ti-mT7"/>
@@ -198,18 +186,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="u8O-DL-QKP" firstAttribute="leading" secondItem="uXM-eh-ioc" secondAttribute="leading" id="7Sk-sm-8VP"/>
-                            <constraint firstItem="UPA-Vg-h1c" firstAttribute="top" secondItem="uXM-eh-ioc" secondAttribute="top" id="D2l-B9-UoK"/>
+                            <constraint firstItem="u8O-DL-QKP" firstAttribute="top" secondItem="jvm-bn-tTh" secondAttribute="bottom" id="Z5D-zl-fIg"/>
                             <constraint firstAttribute="trailing" secondItem="u8O-DL-QKP" secondAttribute="trailing" id="ail-kQ-Ab4"/>
-                            <constraint firstItem="u8O-DL-QKP" firstAttribute="top" secondItem="UPA-Vg-h1c" secondAttribute="bottom" id="chv-GR-BFL"/>
-                            <constraint firstItem="UPA-Vg-h1c" firstAttribute="leading" secondItem="uXM-eh-ioc" secondAttribute="leading" id="u1q-WD-ULn"/>
-                            <constraint firstAttribute="trailing" secondItem="UPA-Vg-h1c" secondAttribute="trailing" id="wyI-im-YM1"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="600" height="260"/>
+                    <size key="freeformSize" width="600" height="216"/>
                     <connections>
                         <outlet property="pickerView" destination="u8O-DL-QKP" id="gwu-2h-W9b"/>
-                        <outlet property="toolbar" destination="UPA-Vg-h1c" id="2Be-gN-vRJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fba-J6-KrC" userLabel="First Responder" sceneMemberID="firstResponder"/>

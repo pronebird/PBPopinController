@@ -12,6 +12,8 @@
 
 @property (weak) IBOutlet UILabel* dateLabel;
 @property (weak) IBOutlet UILabel* countryLabel;
+@property (weak) IBOutlet UITextField* textField;
+@property (weak) IBOutlet UIToolbar* popinAccessory;
 
 @property NSDate* selectedDate;
 @property NSString* selectedCountry;
