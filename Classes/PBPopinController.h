@@ -35,9 +35,14 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
 @interface PBPopinController : NSObject
 
 /**
- *  @abstract A source view controller that requested presentation.
+ *  A source view controller that requested presentation.
  */
 @property (weak, readonly) UIViewController* sourceViewController;
+
+/**
+ *  A source view.
+ */
+@property (weak, readonly) UIView* sourceView;
 
 /**
  *  A content view controller displayed in popin.
@@ -65,8 +70,14 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
  *  @param animated                whether to animate transition
  *  @param completion              a completion handler
  */
-- (void)presentWithContentViewController:(UIViewController*)presentedViewController
+- (void)presentWithContentViewController:(UIViewController*)contentViewController
                       fromViewController:(UIViewController*)sourceViewController
+                                animated:(BOOL)animated
+                              completion:(void(^)(void))completion;
+
+- (void)presentWithContentViewController:(UIViewController*)contentViewController
+                      fromViewController:(UIViewController*)sourceViewController
+                                fromView:(UIView *)fromView
                                 animated:(BOOL)animated
                               completion:(void(^)(void))completion;
 
