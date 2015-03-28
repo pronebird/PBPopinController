@@ -6,8 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PBPopinController.h"
 
+@class PBPopinController;
+
+/**
+ *  This extension swizzles prepareForSegue:sender:, so make sure you call super
+ *  to make sure pop-in controller keeps sender view visible on screen. (relevant for scroll views)
+ */
 @interface UIViewController (PopinController)
 
 /**
