@@ -125,6 +125,18 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         
         [self.containerController setContentViewController:contentViewController animated:NO completion:nil];
         
+        // adjust scroll view insets
+        [self _adjustScrollViewContentInsets:YES
+                        sourceViewController:sourceViewController
+                       contentViewController:contentViewController
+                                    fromView:fromView
+                                    animated:animated];
+        
+        // adjust scroll view content offset
+        [self _adjustScrollViewContentOffset:sourceViewController
+                       contentViewController:contentViewController
+                                    fromView:fromView];
+        
         if(completion) {
             completion();
         }
@@ -153,12 +165,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                 // add dismiss on scroll handler
                 [strongSelf _addDismissOnScrollHandler:sourceViewController];
                 
-                // adjust scroll view insets
-                [strongSelf _adjustScrollViewContentInsets:YES
-                                      sourceViewController:sourceViewController
-                                                  fromView:fromView
-                                     contentViewController:contentViewController];
-                
                 [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
             }
             
@@ -166,6 +172,18 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                 completion();
             }
         }];
+        
+        // adjust scroll view insets
+        [self _adjustScrollViewContentInsets:YES
+                        sourceViewController:sourceViewController
+                       contentViewController:contentViewController
+                                    fromView:fromView
+                                    animated:animated];
+        
+        // adjust scroll view content offset
+        [self _adjustScrollViewContentOffset:sourceViewController
+                       contentViewController:contentViewController
+                                    fromView:fromView];
     }
 }
 
@@ -179,17 +197,18 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     self.presented = NO;
     [self _removeDismissOnScrollHandler];
     
+    // adjust scroll view insets
+    [self _adjustScrollViewContentInsets:NO
+                    sourceViewController:self.sourceViewController
+                   contentViewController:self.contentViewController
+                                fromView:nil
+                                animated:animated];
+    
     [self.containerController setContentViewController:nil animated:animated completion:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
         // check if still dismissed
         if(!strongSelf.presented) {
-            // adjust scroll view insets
-            [strongSelf _adjustScrollViewContentInsets:NO
-                                  sourceViewController:strongSelf.sourceViewController
-                                              fromView:nil
-                                 contentViewController:strongSelf.contentViewController];
-            
             [strongSelf.class popinWindow].rootViewController = nil;
             strongSelf.containerController = nil;
             strongSelf.sourceView = nil;
@@ -220,51 +239,74 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
 
 #pragma mark - UIScrollView: adjust content insets
 
+- (void)_adjustScrollViewContentOffset:(UIViewController *)sourceViewController
+                 contentViewController:(UIViewController *)contentViewController
+                              fromView:(UIView *)fromView
+{
+    if(![sourceViewController.view isKindOfClass:UIScrollView.class]) {
+        return;
+    }
+    
+    UIScrollView *scrollView = (UIScrollView *)sourceViewController.view;
+    CGRect transitionViewRect = [self.containerController finalFrameForTransitionView:contentViewController];
+    CGRect fromViewRect = [fromView convertRect:fromView.bounds toView:nil];
+    
+    if(CGRectIntersectsRect(fromViewRect, transitionViewRect)) {
+        CGPoint scrollOffset = scrollView.contentOffset;
+        scrollOffset.y += CGRectGetMaxY(fromViewRect) - CGRectGetMinY(transitionViewRect);
+        [scrollView setContentOffset:scrollOffset animated:YES];
+    }
+}
+
 - (void)_adjustScrollViewContentInsets:(BOOL)presenting
                   sourceViewController:(UIViewController *)sourceViewController
-                              fromView:(UIView *)fromView
                  contentViewController:(UIViewController *)contentViewController
+                              fromView:(UIView *)fromView
+                              animated:(BOOL)animated
 {
-    UIEdgeInsets currentContentInsets = self.scrollViewContentInsets;
+    if(![sourceViewController.view isKindOfClass:UIScrollView.class]) {
+        return;
+    }
     
-    if([sourceViewController.view isKindOfClass:UIScrollView.class]) {
-        UIScrollView *scrollView = (UIScrollView *)sourceViewController.view;
-        UIEdgeInsets contentInset = scrollView.contentInset;
+    UIEdgeInsets popinContentInsets = self.scrollViewContentInsets;
+    UIScrollView *scrollView = (UIScrollView *)sourceViewController.view;
+    UIEdgeInsets scrollContentInset = scrollView.contentInset;
+    
+    if(presenting) {
+        CGRect transitionViewRect = [self.containerController finalFrameForTransitionView:contentViewController];
         
-        if(presenting) {
-            CGRect transitionViewRect = [self.containerController finalFrameForTransitionView:sourceViewController];
-            CGRect viewRectInWindow = [fromView convertRect:fromView.bounds toView:nil];
-            CGFloat bottomInset = 0;
-            
-            if(CGRectIntersectsRect(viewRectInWindow, transitionViewRect)) {
-                CGFloat d = CGRectGetMinY(transitionViewRect) - CGRectGetMaxY(viewRectInWindow);
-                if(d < 0) {
-                    bottomInset = fabs(d);
-                }
-            }
-            
-            currentContentInsets.bottom = bottomInset;
-            contentInset.bottom += bottomInset;
-            
-            scrollView.contentInset = contentInset;
-            self.scrollViewContentInsets = currentContentInsets;
-            
-            if(bottomInset > 0) {
-                CGPoint contentOffset = scrollView.contentOffset;
-                contentOffset.y += bottomInset;
-                [scrollView setContentOffset:contentOffset animated:YES];
-            }
-        }
-        else {
-            contentInset.bottom -= currentContentInsets.bottom;
-            currentContentInsets.bottom = 0;
-            
-            self.scrollViewContentInsets = currentContentInsets;
-            
-            [UIView animateWithDuration:0.25 animations:^{
-                scrollView.contentInset = contentInset;
-            }];
-        }
+        // substract previous inset
+        scrollContentInset.bottom -= popinContentInsets.bottom;
+        
+        // calculate new inset
+        popinContentInsets.bottom = CGRectGetHeight(transitionViewRect);
+        
+        // add new inset
+        scrollContentInset.bottom += popinContentInsets.bottom;
+        
+        // save new insets
+        self.scrollViewContentInsets = popinContentInsets;
+    }
+    else {
+        // substract previous inset
+        scrollContentInset.bottom -= popinContentInsets.bottom;
+        
+        // reset saved inset
+        popinContentInsets.bottom = 0;
+        
+        // save new insets
+        self.scrollViewContentInsets = popinContentInsets;
+    }
+    
+    void(^animatedBlock)(void) = ^{
+        scrollView.contentInset = scrollContentInset;
+    };
+    
+    if(animated) {
+        [UIView animateWithDuration:0.35 animations:animatedBlock];
+    }
+    else {
+        animatedBlock();
     }
 }
 
