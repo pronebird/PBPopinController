@@ -136,7 +136,7 @@
 
 #pragma mark - Presentation animations
 
-- (CGRect)_finalFrameForTransitionView:(UIViewController*)controller {
+- (CGRect)finalFrameForTransitionView:(UIViewController*)controller {
     CGRect transitionRect;
     UIView* accessoryView = controller.popinAccessoryView;
     
@@ -155,7 +155,7 @@
 }
 
 - (CGRect)_initialFrameForTransitionView:(UIViewController*)controller {
-    CGRect transitionRect = [self _finalFrameForTransitionView:controller];
+    CGRect transitionRect = [self finalFrameForTransitionView:controller];
     
     transitionRect.origin.y = CGRectGetHeight(self.view.bounds);
     
@@ -178,7 +178,7 @@
     NSParameterAssert(transitionView);
     
     void(^animations)(void) = ^{
-        transitionView.frame = [self _finalFrameForTransitionView:controller];
+        transitionView.frame = [self finalFrameForTransitionView:controller];
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
@@ -303,7 +303,7 @@
     contentRect.origin = CGPointMake(0, accessorySize.height);
     contentRect.size = contentSize;
     
-    transitionView.frame = [self _finalFrameForTransitionView:controller];
+    transitionView.frame = [self finalFrameForTransitionView:controller];
     
     controller.view.frame = contentRect;
     accessoryView.frame = accessoryRect;

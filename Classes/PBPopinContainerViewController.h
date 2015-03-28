@@ -15,7 +15,7 @@
 @property (readonly) UIViewController* contentViewController;
 
 /**
- *  Designated initializer
+ *  Designated initializer.
  *
  *  @param contentViewController an instance of content view controller or nil
  *
@@ -24,12 +24,21 @@
 - (instancetype)initWithContentViewController:(UIViewController*)contentViewController NS_DESIGNATED_INITIALIZER;
 
 /**
- *  Set content view controller
+ *  Set content view controller.
  *
  *  @param contentViewController an instance of content view controller
  *  @param animated              use animations or not
  *  @param completion            a handler block called in the end of transition
  */
 - (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated completion:(void(^)(void))completion;
+
+/**
+ *  Frame of content view controller when presented.
+ *
+ *  @param controller a content view controller
+ *
+ *  @return CGRect
+ */
+- (CGRect)finalFrameForTransitionView:(UIViewController*)controller;
 
 @end
