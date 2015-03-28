@@ -237,9 +237,10 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
             CGFloat bottomInset = 0;
             
             if(CGRectIntersectsRect(viewRectInWindow, transitionViewRect)) {
-                CGRect intersection = CGRectIntersection(viewRectInWindow, transitionViewRect);
-                
-                bottomInset = CGRectGetHeight(intersection);
+                CGFloat d = CGRectGetMinY(transitionViewRect) - CGRectGetMaxY(viewRectInWindow);
+                if(d < 0) {
+                    bottomInset = fabs(d);
+                }
             }
             
             currentContentInsets.bottom = bottomInset;
