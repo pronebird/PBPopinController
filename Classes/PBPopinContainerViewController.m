@@ -43,7 +43,11 @@
     return self;
 }
 
-- (void)setContentViewController:(UIViewController *)contentViewController animated:(BOOL)animated completion:(void(^)(void))completion {
+- (void)setContentViewController:(UIViewController *)contentViewController
+                        animated:(BOOL)animated
+              alongsideAnimation:(void(^)(void))alongsideAnimation
+                      completion:(void(^)(void))completion
+{
     UIViewController* presentedContentController = self.contentViewController;
     UIView* transitionView = self.transitionView;
     
@@ -66,6 +70,7 @@
         [self _dismissContentViewController:presentedContentController
                              transitionView:transitionView
                                    animated:animated
+                         alongsideAnimation:alongsideAnimation
                                  completion:^{
                                      // remove content view controller
                                      [self _removeContentViewController:presentedContentController
@@ -90,6 +95,7 @@
         [self _presentContentViewController:contentViewController
                              transitionView:self.transitionView
                                    animated:animated
+                         alongsideAnimation:alongsideAnimation
                                  completion:completion];
     }
     else // replace current controller
@@ -100,6 +106,10 @@
         
         [self _removeContentViewController:presentedContentController fromTransitionView:transitionView];
         [self _addContentViewController:contentViewController intoTransitionView:transitionView];
+        
+        if(alongsideAnimation) {
+            alongsideAnimation();
+        }
         
         if(completion) {
             completion();
@@ -173,6 +183,7 @@
 - (void)_presentContentViewController:(UIViewController*)controller
                        transitionView:(UIView*)transitionView
                              animated:(BOOL)animated
+                   alongsideAnimation:(void(^)(void))alongsideAnimation
                            completion:(void(^)(void))completion
 {
     NSParameterAssert(transitionView);
@@ -180,6 +191,10 @@
     CGRect finalFrameForTransitionView = [self finalFrameForTransitionView:controller];
     void(^animations)(void) = ^{
         transitionView.frame = finalFrameForTransitionView;
+        
+        if(alongsideAnimation) {
+            alongsideAnimation();
+        }
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
@@ -205,11 +220,16 @@
 - (void)_dismissContentViewController:(UIViewController*)controller
                        transitionView:(UIView*)transitionView
                              animated:(BOOL)animated
+                   alongsideAnimation:(void(^)(void))alongsideAnimation
                            completion:(void(^)(void))completion
 {
     CGRect initialFrameForTransitionView = [self _initialFrameForTransitionView:controller];
     void(^animations)(void) = ^{
        transitionView.frame = initialFrameForTransitionView;
+        
+        if(alongsideAnimation) {
+            alongsideAnimation();
+        }
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {

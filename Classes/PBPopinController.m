@@ -123,19 +123,24 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         self.sourceViewController = sourceViewController;
         self.sourceView = fromView;
         
-        [self.containerController setContentViewController:contentViewController animated:NO completion:nil];
+        __weak typeof(self) weakSelf = self;
         
-        // adjust scroll view insets
-        [self _adjustScrollViewContentInsets:YES
-                        sourceViewController:sourceViewController
-                       contentViewController:contentViewController
-                                    fromView:fromView
-                                    animated:animated];
-        
-        // adjust scroll view content offset
-        [self _adjustScrollViewContentOffset:sourceViewController
-                       contentViewController:contentViewController
-                                    fromView:fromView];
+        [self.containerController setContentViewController:contentViewController
+                                                  animated:NO
+                                        alongsideAnimation:^{
+                                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                                            
+                                            // adjust scroll view insets
+                                            [strongSelf _adjustScrollViewContentInsets:YES
+                                                                  sourceViewController:sourceViewController
+                                                                 contentViewController:contentViewController];
+                                            
+                                            // adjust scroll view content offset
+                                            [strongSelf _adjustScrollViewContentOffset:sourceViewController
+                                                                 contentViewController:contentViewController
+                                                                              fromView:fromView];
+                                        }
+                                                completion:nil];
         
         if(completion) {
             completion();
@@ -157,33 +162,36 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         
         __weak typeof(self) weakSelf = self;
         
-        [self.containerController setContentViewController:self.contentViewController animated:animated completion:^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            
-            // check if still presented
-            if(strongSelf.presented) {
-                // add dismiss on scroll handler
-                [strongSelf _addDismissOnScrollHandler:sourceViewController];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
-            }
-            
-            if(completion) {
-                completion();
-            }
-        }];
-        
-        // adjust scroll view insets
-        [self _adjustScrollViewContentInsets:YES
-                        sourceViewController:sourceViewController
-                       contentViewController:contentViewController
-                                    fromView:fromView
-                                    animated:animated];
-        
-        // adjust scroll view content offset
-        [self _adjustScrollViewContentOffset:sourceViewController
-                       contentViewController:contentViewController
-                                    fromView:fromView];
+        [self.containerController setContentViewController:self.contentViewController
+                                                  animated:animated
+                                        alongsideAnimation:^{
+                                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                                            
+                                            // adjust scroll view insets
+                                            [strongSelf _adjustScrollViewContentInsets:YES
+                                                                  sourceViewController:sourceViewController
+                                                                 contentViewController:contentViewController];
+                                            
+                                            // adjust scroll view content offset
+                                            [strongSelf _adjustScrollViewContentOffset:sourceViewController
+                                                                 contentViewController:contentViewController
+                                                                              fromView:fromView];
+                                        }
+                                                completion:^{
+                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                    
+                                                    // check if still presented
+                                                    if(strongSelf.presented) {
+                                                        // add dismiss on scroll handler
+                                                        [strongSelf _addDismissOnScrollHandler:sourceViewController];
+                                                        
+                                                        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
+                                                    }
+                                                    
+                                                    if(completion) {
+                                                        completion();
+                                                    }
+                                                }];
     }
 }
 
@@ -197,33 +205,36 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     self.presented = NO;
     [self _removeDismissOnScrollHandler];
     
-    // adjust scroll view insets
-    [self _adjustScrollViewContentInsets:NO
-                    sourceViewController:self.sourceViewController
-                   contentViewController:self.contentViewController
-                                fromView:nil
-                                animated:animated];
-    
-    [self.containerController setContentViewController:nil animated:animated completion:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        
-        // check if still dismissed
-        if(!strongSelf.presented) {
-            [strongSelf.class popinWindow].rootViewController = nil;
-            strongSelf.containerController = nil;
-            strongSelf.sourceView = nil;
-            strongSelf.contentViewController.popinController = nil;
-            
-            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-            [strongSelf _hidePopinWindow];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
-        }
-        
-        if(completion) {
-            completion();
-        }
-    }];
+    [self.containerController setContentViewController:nil
+                                              animated:animated
+                                    alongsideAnimation:^{
+                                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                                        
+                                        // adjust scroll view insets
+                                        [strongSelf _adjustScrollViewContentInsets:NO
+                                                              sourceViewController:strongSelf.sourceViewController
+                                                             contentViewController:strongSelf.contentViewController];
+                                    }
+                                            completion:^{
+                                                __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                
+                                                // check if still dismissed
+                                                if(!strongSelf.presented) {
+                                                    [strongSelf.class popinWindow].rootViewController = nil;
+                                                    strongSelf.containerController = nil;
+                                                    strongSelf.sourceView = nil;
+                                                    strongSelf.contentViewController.popinController = nil;
+                                                    
+                                                    [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+                                                    [strongSelf _hidePopinWindow];
+                                                    
+                                                    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+                                                }
+                                                
+                                                if(completion) {
+                                                    completion();
+                                                }
+                                            }];
 }
 
 #pragma mark - Private
@@ -254,15 +265,13 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     if(CGRectIntersectsRect(fromViewRect, transitionViewRect)) {
         CGPoint scrollOffset = scrollView.contentOffset;
         scrollOffset.y += CGRectGetMaxY(fromViewRect) - CGRectGetMinY(transitionViewRect);
-        [scrollView setContentOffset:scrollOffset animated:YES];
+        [scrollView setContentOffset:scrollOffset animated:NO];
     }
 }
 
 - (void)_adjustScrollViewContentInsets:(BOOL)presenting
                   sourceViewController:(UIViewController *)sourceViewController
                  contentViewController:(UIViewController *)contentViewController
-                              fromView:(UIView *)fromView
-                              animated:(BOOL)animated
 {
     if(![sourceViewController.view isKindOfClass:UIScrollView.class]) {
         return;
@@ -298,16 +307,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         self.scrollViewContentInsets = popinContentInsets;
     }
     
-    void(^animatedBlock)(void) = ^{
-        scrollView.contentInset = scrollContentInset;
-    };
-    
-    if(animated) {
-        [UIView animateWithDuration:0.35 animations:animatedBlock];
-    }
-    else {
-        animatedBlock();
-    }
+    scrollView.contentInset = scrollContentInset;
 }
 
 #pragma mark - UIScrollView: dismiss on scroll
