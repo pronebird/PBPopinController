@@ -177,8 +177,9 @@
 {
     NSParameterAssert(transitionView);
     
+    CGRect finalFrameForTransitionView = [self finalFrameForTransitionView:controller];
     void(^animations)(void) = ^{
-        transitionView.frame = [self finalFrameForTransitionView:controller];
+        transitionView.frame = finalFrameForTransitionView;
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
@@ -206,8 +207,9 @@
                              animated:(BOOL)animated
                            completion:(void(^)(void))completion
 {
+    CGRect initialFrameForTransitionView = [self _initialFrameForTransitionView:controller];
     void(^animations)(void) = ^{
-       transitionView.frame = [self _initialFrameForTransitionView:controller];
+       transitionView.frame = initialFrameForTransitionView;
     };
     
     void(^animationCompletion)(BOOL finished) = ^(BOOL finished) {
