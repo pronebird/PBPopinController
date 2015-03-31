@@ -145,9 +145,16 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     NSParameterAssert(contentViewController);
     NSParameterAssert(sourceViewController);
     NSParameterAssert(!fromView || [fromView isKindOfClass:UIView.class]);
+    
+    // we present without animation only when we replace already presented controller
+    BOOL shouldReplaceContent = self.presented;
 
     // set touches passthrough
     [self.class popinWindow].passthroughTouches = !modal;
+    
+    // remove gestures
+    [self _removeDismissOnBackdropTap];
+    [self _removeDismissOnScrollHandler];
     
     // dismiss keyboard
     [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
@@ -155,8 +162,43 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     // assign popinController to content controller
     contentViewController.popinController = self;
     
+    void(^alongsideAnimation)(void) = ^{
+        // backdrop will be animated alongside
+        // and animated individually when replacing controller
+        [self.containerController setShowsBackdrop:modal animated:shouldReplaceContent];
+        
+        // adjust scroll view insets
+        [self _adjustScrollViewContentInsets:YES
+                        sourceViewController:sourceViewController
+                       contentViewController:contentViewController];
+        
+        // adjust scroll view content offset
+        [self _adjustScrollViewContentOffset:sourceViewController
+                       contentViewController:contentViewController
+                                    fromView:fromView];
+    };
+    
+    void(^animationFinished)(void) = ^{
+        if(completion) {
+            completion();
+        }
+        
+        if(!self.presented) { // can be dismissed in between transition.
+            return;
+        }
+        
+        if(modal) {
+            // add dismiss on tap handler when using modal presentation
+            [self _addDismissOnBackdropTap];
+        }
+        else {
+            // add dismiss on scroll handler when using non-modal presentation
+            [self _addDismissOnScrollHandler:sourceViewController];
+        }
+    };
+    
     // Replace content view controller if controller is already presented
-    if(self.presented)
+    if(shouldReplaceContent)
     {
         self.contentViewController.popinController = nil;
         
@@ -164,35 +206,10 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         self.sourceViewController = sourceViewController;
         self.sourceView = fromView;
         
-        __weak typeof(self) weakSelf = self;
-        
         [self.containerController setContentViewController:contentViewController
                                                   animated:NO
-                                        alongsideAnimation:^{
-                                            __strong typeof(weakSelf) strongSelf = weakSelf;
-                                            
-                                            // fade backdrop
-                                            strongSelf.containerController.showsBackdrop = modal;
-                                            
-                                            // add dismiss on scroll handler
-                                            [strongSelf _addDismissOnScrollHandler:sourceViewController];
-                                            
-                                            // add dismiss on tap handler
-                                            if(modal) {
-                                                [strongSelf _addDismissOnBackdropTap];
-                                            }
-                                            
-                                            // adjust scroll view insets
-                                            [strongSelf _adjustScrollViewContentInsets:YES
-                                                                  sourceViewController:sourceViewController
-                                                                 contentViewController:contentViewController];
-                                            
-                                            // adjust scroll view content offset
-                                            [strongSelf _adjustScrollViewContentOffset:sourceViewController
-                                                                 contentViewController:contentViewController
-                                                                              fromView:fromView];
-                                        }
-                                                completion:nil];
+                                        alongsideAnimation:alongsideAnimation
+                                                completion:animationFinished];
         
         if(completion) {
             completion();
@@ -216,41 +233,17 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         
         [self.containerController setContentViewController:self.contentViewController
                                                   animated:animated
-                                        alongsideAnimation:^{
-                                            __strong typeof(weakSelf) strongSelf = weakSelf;
-                                            
-                                            // fade backdrop
-                                            strongSelf.containerController.showsBackdrop = modal;
-                                            
-                                            // adjust scroll view insets
-                                            [strongSelf _adjustScrollViewContentInsets:YES
-                                                                  sourceViewController:sourceViewController
-                                                                 contentViewController:contentViewController];
-                                            
-                                            // adjust scroll view content offset
-                                            [strongSelf _adjustScrollViewContentOffset:sourceViewController
-                                                                 contentViewController:contentViewController
-                                                                              fromView:fromView];
-                                        }
+                                        alongsideAnimation:alongsideAnimation
                                                 completion:^{
                                                     __strong typeof(weakSelf) strongSelf = weakSelf;
                                                     
                                                     // check if still presented
                                                     if(strongSelf.presented) {
-                                                        // add dismiss on scroll handler
-                                                        [strongSelf _addDismissOnScrollHandler:sourceViewController];
-                                                        
-                                                        // add dismiss on tap handler
-                                                        if(modal) {
-                                                            [strongSelf _addDismissOnBackdropTap];
-                                                        }
-                                                        
                                                         [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
                                                     }
                                                     
-                                                    if(completion) {
-                                                        completion();
-                                                    }
+                                                    animationFinished();
+                                                    
                                                 }];
     }
 }
