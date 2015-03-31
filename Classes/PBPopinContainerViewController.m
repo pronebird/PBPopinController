@@ -40,6 +40,14 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
 
 @implementation PBPopinContainerViewController
 
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.contentViewController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarHidden {
+    return self.contentViewController;
+}
+
 - (void)loadView {
     self.view = [[_PBPopinContainerView alloc] initWithFrame:CGRectZero];
 }
@@ -432,6 +440,9 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     
     
     [self _layoutTransitionView:transitionView controller:controller animated:animated];
+    
+    // update statusbar appearance after adding new content controller
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 /**
