@@ -174,6 +174,14 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                             // fade backdrop
                                             strongSelf.containerController.showsBackdrop = modal;
                                             
+                                            // add dismiss on scroll handler
+                                            [strongSelf _addDismissOnScrollHandler:sourceViewController];
+                                            
+                                            // add dismiss on tap handler
+                                            if(modal) {
+                                                [strongSelf _addDismissOnBackdropTap];
+                                            }
+                                            
                                             // adjust scroll view insets
                                             [strongSelf _adjustScrollViewContentInsets:YES
                                                                   sourceViewController:sourceViewController
