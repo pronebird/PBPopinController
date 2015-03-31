@@ -131,7 +131,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         self.contentViewController = contentViewController;
         self.transitionView = [self _createTransitionView];
         
-        [self _addContentViewController:contentViewController intoTransitionView:self.transitionView];
+        [self _addContentViewController:contentViewController intoTransitionView:self.transitionView animated:NO];
         [self _presentContentViewController:contentViewController
                              transitionView:self.transitionView
                                    animated:animated
@@ -145,7 +145,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         self.contentViewController = contentViewController;
         
         [self _removeContentViewController:presentedContentController fromTransitionView:transitionView];
-        [self _addContentViewController:contentViewController intoTransitionView:transitionView];
+        [self _addContentViewController:contentViewController intoTransitionView:transitionView animated:YES];
         
         if(alongsideAnimation) {
             alongsideAnimation();
@@ -164,7 +164,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     if(self.contentViewController && self.contentViewController.parentViewController != self) {
         self.transitionView = [self _createTransitionView];
         
-        [self _addContentViewController:self.contentViewController intoTransitionView:self.transitionView];
+        [self _addContentViewController:self.contentViewController intoTransitionView:self.transitionView animated:NO];
     }
     
     // setup backdrop view
@@ -184,14 +184,14 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
+        [self _layoutTransitionView:self.transitionView controller:self.contentViewController animated:NO];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {}];
 }
 
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
     [super preferredContentSizeDidChangeForChildContentContainer:container];
     
-    [self _layoutTransitionView:self.transitionView controller:self.contentViewController];
+    [self _layoutTransitionView:self.transitionView controller:self.contentViewController animated:NO];
 }
 
 #pragma mark - Presentation animations
@@ -360,8 +360,9 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
  *
  *  @param transitionView an instance of transitionView
  *  @param controller     an associated content controller
+ *  @param animated       animate frame changes?
  */
-- (void)_layoutTransitionView:(UIView*)transitionView controller:(UIViewController*)controller {
+- (void)_layoutTransitionView:(UIView*)transitionView controller:(UIViewController*)controller animated:(BOOL)animated {
     UIView* accessoryView = controller.popinAccessoryView;
     
     CGSize accessorySize = [self _sizeForAccessoryView:accessoryView];
@@ -375,7 +376,21 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     contentRect.origin = CGPointMake(0, accessorySize.height);
     contentRect.size = contentSize;
     
-    transitionView.frame = [self finalFrameForTransitionView:controller];
+    CGRect transitionRect = [self finalFrameForTransitionView:controller];
+    
+    if(animated) {
+        [UIView animateWithDuration:[self _transitionDuration]
+                              delay:0.0
+                            options:[self _animationOptions]
+                         animations:^{
+                             transitionView.frame = transitionRect;
+                         } completion:^(BOOL finished) {
+                             
+                         }];
+    }
+    else {
+        transitionView.frame = transitionRect;
+    }
     
     controller.view.frame = contentRect;
     accessoryView.frame = accessoryRect;
@@ -387,8 +402,9 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
  *
  *  @param controller     an instance of content view controller
  *  @param transitionView an instance of transition view
+ *  @param animated       perform animated transition?
  */
-- (void)_addContentViewController:(UIViewController*)controller intoTransitionView:(UIView*)transitionView {
+- (void)_addContentViewController:(UIViewController*)controller intoTransitionView:(UIView*)transitionView animated:(BOOL)animated {
     UIView* accessoryView = controller.popinAccessoryView;
     
     // sharing the same accessory between popin controllers is ok,
@@ -414,7 +430,8 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         [transitionView addSubview:accessoryView];
     }
     
-    [self _layoutTransitionView:transitionView controller:controller];
+    
+    [self _layoutTransitionView:transitionView controller:controller animated:animated];
 }
 
 /**
