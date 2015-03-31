@@ -15,11 +15,18 @@ NSString* const PBPopinControllerWillDisappearNotification = @"PBPopinController
 NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerDidDisappearNotification";
 
 @interface _PBPopinWindow : UIWindow
+
+@property BOOL passthroughTouches;
+
 @end
 
 @implementation _PBPopinWindow
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    if(!self.passthroughTouches) {
+        return [super pointInside:point withEvent:event];
+    }
+    
     PBPopinContainerViewController* container = (PBPopinContainerViewController *)self.rootViewController;
     UIView* transitionView = container.contentViewController.view.superview;
     
@@ -45,6 +52,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
 @property (weak, readwrite) UIView* sourceView;
 @property (readwrite) UIViewController* contentViewController;
 @property (readwrite) BOOL presented;
+@property UITapGestureRecognizer *dismissTapGestureRecognizer;
 
 @property UIEdgeInsets scrollViewContentInsets;
 
@@ -88,25 +96,58 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     }
 }
 
+- (void)presentModalWithContentViewController:(UIViewController*)contentViewController
+                           fromViewController:(UIViewController*)sourceViewController
+                                     animated:(BOOL)animated
+                                   completion:(void(^)(void))completion;
+{
+    [self _presentWithContentViewController:contentViewController
+                         fromViewController:sourceViewController
+                                   fromView:nil
+                                    modal:YES
+                                   animated:animated
+                                 completion:completion];
+}
+
 - (void)presentWithContentViewController:(UIViewController*)contentViewController
                       fromViewController:(UIViewController*)sourceViewController
                                 animated:(BOOL)animated
                               completion:(void(^)(void))completion {
-    [self presentWithContentViewController:contentViewController
-                        fromViewController:sourceViewController
-                                  fromView:nil
-                                  animated:animated
-                                completion:completion];
+    [self _presentWithContentViewController:contentViewController
+                         fromViewController:sourceViewController
+                                   fromView:nil
+                                    modal:NO
+                                   animated:animated
+                                 completion:completion];
 }
 
 - (void)presentWithContentViewController:(UIViewController*)contentViewController
                       fromViewController:(UIViewController*)sourceViewController
                                 fromView:(UIView *)fromView
                                 animated:(BOOL)animated
-                              completion:(void(^)(void))completion {
+                              completion:(void(^)(void))completion
+{
+    [self _presentWithContentViewController:contentViewController
+                         fromViewController:sourceViewController
+                                   fromView:fromView
+                                    modal:NO
+                                   animated:animated
+                                 completion:completion];
+}
+
+- (void)_presentWithContentViewController:(UIViewController*)contentViewController
+                      fromViewController:(UIViewController*)sourceViewController
+                                fromView:(UIView *)fromView
+                                 modal:(BOOL)modal
+                                animated:(BOOL)animated
+                              completion:(void(^)(void))completion
+{
     NSParameterAssert(contentViewController);
     NSParameterAssert(sourceViewController);
     NSParameterAssert(!fromView || [fromView isKindOfClass:UIView.class]);
+
+    // set touches passthrough
+    [self.class popinWindow].passthroughTouches = !modal;
     
     // dismiss keyboard
     [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
@@ -129,6 +170,9 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                                   animated:NO
                                         alongsideAnimation:^{
                                             __strong typeof(weakSelf) strongSelf = weakSelf;
+                                            
+                                            // fade backdrop
+                                            strongSelf.containerController.showsBackdrop = modal;
                                             
                                             // adjust scroll view insets
                                             [strongSelf _adjustScrollViewContentInsets:YES
@@ -167,6 +211,9 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                         alongsideAnimation:^{
                                             __strong typeof(weakSelf) strongSelf = weakSelf;
                                             
+                                            // fade backdrop
+                                            strongSelf.containerController.showsBackdrop = modal;
+                                            
                                             // adjust scroll view insets
                                             [strongSelf _adjustScrollViewContentInsets:YES
                                                                   sourceViewController:sourceViewController
@@ -184,6 +231,11 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                                     if(strongSelf.presented) {
                                                         // add dismiss on scroll handler
                                                         [strongSelf _addDismissOnScrollHandler:sourceViewController];
+                                                        
+                                                        // add dismiss on tap handler
+                                                        if(modal) {
+                                                            [strongSelf _addDismissOnBackdropTap];
+                                                        }
                                                         
                                                         [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
                                                     }
@@ -204,11 +256,15 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     
     self.presented = NO;
     [self _removeDismissOnScrollHandler];
+    [self _removeDismissOnBackdropTap];
     
     [self.containerController setContentViewController:nil
                                               animated:animated
                                     alongsideAnimation:^{
                                         __strong typeof(weakSelf) strongSelf = weakSelf;
+                                        
+                                        // fade backdrop
+                                        strongSelf.containerController.showsBackdrop = NO;
                                         
                                         // adjust scroll view insets
                                         [strongSelf _adjustScrollViewContentInsets:NO
@@ -308,6 +364,23 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     }
     
     scrollView.contentInset = scrollContentInset;
+}
+
+#pragma mark - BackdropView: dismiss on tap
+
+- (void)_addDismissOnBackdropTap {
+    [self _removeDismissOnBackdropTap];
+    self.dismissTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handleTapGesture:)];
+    [self.containerController.backdropView addGestureRecognizer:self.dismissTapGestureRecognizer];
+}
+
+- (void)_removeDismissOnBackdropTap {
+    [[self.dismissTapGestureRecognizer view] removeGestureRecognizer:self.dismissTapGestureRecognizer];
+    self.dismissTapGestureRecognizer = nil;
+}
+
+- (void)_handleTapGesture:(UIGestureRecognizer *)gestureRecognizer {
+    [self dismissAnimated:YES completion:nil];
 }
 
 #pragma mark - UIScrollView: dismiss on scroll

@@ -62,6 +62,20 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
 + (instancetype)sharedPopinController;
 
 /**
+ *  @abstract Present popin controller modally. This usually creates a backdrop overlay.
+ *  @discussion You can call present multiple times, this will replace child controller within presented popin controller.
+ *
+ *  @param presentedViewController a content controller that will be displayed in popin controller
+ *  @param sourceViewController    a source view controller you request presentation from
+ *  @param animated                whether to animate transition
+ *  @param completion              a completion handler
+ */
+- (void)presentModalWithContentViewController:(UIViewController*)contentViewController
+                           fromViewController:(UIViewController*)sourceViewController
+                                     animated:(BOOL)animated
+                                   completion:(void(^)(void))completion;
+
+/**
  *  @abstract Present popin controller.
  *  @discussion You can call present multiple times, this will replace child controller within presented popin controller.
  *
@@ -75,6 +89,16 @@ extern NSString* const PBPopinControllerDidDisappearNotification;
                                 animated:(BOOL)animated
                               completion:(void(^)(void))completion;
 
+/**
+ *  @abstract Present popin controller.
+ *  @discussion You can call present multiple times, this will replace child controller within presented popin controller.
+ *
+ *  @param presentedViewController a content controller that will be displayed in popin controller
+ *  @param sourceViewController    a source view controller you request presentation from
+ *  @param fromView                a sender view
+ *  @param animated                whether to animate transition
+ *  @param completion              a completion handler
+ */
 - (void)presentWithContentViewController:(UIViewController*)contentViewController
                       fromViewController:(UIViewController*)sourceViewController
                                 fromView:(UIView *)fromView

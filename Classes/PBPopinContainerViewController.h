@@ -15,6 +15,16 @@
 @property (readonly) UIViewController* contentViewController;
 
 /**
+ *  Backdrop view.
+ */
+@property (readonly) UIView *backdropView;
+
+/**
+ *  Whether view controller should show a backdrop view.
+ */
+@property (nonatomic) BOOL showsBackdrop;
+
+/**
  *  Designated initializer.
  *
  *  @param contentViewController an instance of content view controller or nil

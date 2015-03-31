@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		583CA7871ACAE75900C560B0 /* PBModalPopinSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 583CA7861ACAE75900C560B0 /* PBModalPopinSegue.m */; };
 		58B964E11A9B485C00C8E8AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B964E01A9B485C00C8E8AD /* main.m */; };
 		58B964E41A9B485C00C8E8AD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B964E31A9B485C00C8E8AD /* AppDelegate.m */; };
 		58B964EA1A9B485C00C8E8AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58B964E81A9B485C00C8E8AD /* Main.storyboard */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		583CA7851ACAE75900C560B0 /* PBModalPopinSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PBModalPopinSegue.h; path = Classes/PBModalPopinSegue.h; sourceTree = SOURCE_ROOT; };
+		583CA7861ACAE75900C560B0 /* PBModalPopinSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBModalPopinSegue.m; path = Classes/PBModalPopinSegue.m; sourceTree = SOURCE_ROOT; };
 		58B964DB1A9B485C00C8E8AD /* PBControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PBControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58B964DF1A9B485C00C8E8AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58B964E01A9B485C00C8E8AD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -151,6 +154,8 @@
 				58B965071A9B489F00C8E8AD /* PBPopinController.m */,
 				58B965081A9B489F00C8E8AD /* PBPopinSegue.h */,
 				58B965091A9B489F00C8E8AD /* PBPopinSegue.m */,
+				583CA7851ACAE75900C560B0 /* PBModalPopinSegue.h */,
+				583CA7861ACAE75900C560B0 /* PBModalPopinSegue.m */,
 				58B9650C1A9B489F00C8E8AD /* UIViewController+PopinController.h */,
 				58B9650D1A9B489F00C8E8AD /* UIViewController+PopinController.m */,
 			);
@@ -263,6 +268,7 @@
 				58B965121A9B489F00C8E8AD /* UIViewController+PopinController.m in Sources */,
 				58B9650F1A9B489F00C8E8AD /* PBPopinController.m in Sources */,
 				58B965191A9B4B5900C8E8AD /* TableViewController.m in Sources */,
+				583CA7871ACAE75900C560B0 /* PBModalPopinSegue.m in Sources */,
 				58B9650E1A9B489F00C8E8AD /* PBPopinContainerViewController.m in Sources */,
 				58B965161A9B4AF200C8E8AD /* DatePickerViewController.m in Sources */,
 				58B964E11A9B485C00C8E8AD /* main.m in Sources */,

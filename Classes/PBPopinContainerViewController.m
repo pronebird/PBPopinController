@@ -10,11 +10,14 @@
 
 #define UIViewAnimationOptionCurveKeyboard 7 << 16
 
+#define MARKER_CLASS(__class, __super) \
+    @interface __class : __super @end \
+    @implementation __class @end
+
 // Marker classes for debugging purposes
-@interface _PBPopinTransitionView : UIView @end
-@implementation _PBPopinTransitionView @end
-@interface _PBPopinContainerView : UIView @end
-@implementation _PBPopinContainerView @end
+MARKER_CLASS(_PBPopinBackdropView, UIView)
+MARKER_CLASS(_PBPopinTransitionView, UIView)
+MARKER_CLASS(_PBPopinContainerView, UIView)
 
 @interface PBPopinContainerViewController ()
 
@@ -27,6 +30,11 @@
  *  This view is used for animations and contains accessory view and content view.
  */
 @property UIView* transitionView;
+
+/**
+ *  Backdrop view.
+ */
+@property (readwrite) UIView *backdropView;
 
 @end
 
@@ -43,13 +51,26 @@
     return self;
 }
 
+- (void)setShowsBackdrop:(BOOL)showsBackdrop {
+    UIColor *backgroundColor;
+    
+    if(showsBackdrop) {
+        backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    }
+    else {
+        backgroundColor = [UIColor clearColor];
+    }
+    
+    self.backdropView.backgroundColor = backgroundColor;
+}
+
 - (void)setContentViewController:(UIViewController *)contentViewController
                         animated:(BOOL)animated
               alongsideAnimation:(void(^)(void))alongsideAnimation
                       completion:(void(^)(void))completion
 {
     UIViewController* presentedContentController = self.contentViewController;
-    UIView* transitionView = self.transitionView;
+    _PBPopinTransitionView* transitionView = self.transitionView;
     
     // check if equal
     if(contentViewController == presentedContentController) {
@@ -126,6 +147,16 @@
         
         [self _addContentViewController:self.contentViewController intoTransitionView:self.transitionView];
     }
+    
+    // setup backdrop view
+    self.backdropView = [[_PBPopinBackdropView alloc] initWithFrame:self.view.bounds];
+    self.backdropView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.backdropView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.backdropView];
+    
+    NSDictionary *viewsDictionary = @{ @"backdrop": self.backdropView };
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backdrop]|" options:0 metrics:nil views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backdrop]|" options:0 metrics:nil views:viewsDictionary]];
 }
 
 #pragma mark - Content size changes
@@ -258,8 +289,8 @@
  *
  *  @return an instance of _PBPopinTransitionView
  */
-- (UIView*)_createTransitionView {
-    UIView* transitionView = [[_PBPopinTransitionView alloc] initWithFrame:self.view.bounds];
+- (_PBPopinTransitionView *)_createTransitionView {
+    _PBPopinTransitionView* transitionView = [[_PBPopinTransitionView alloc] initWithFrame:self.view.bounds];
     
     [self.view addSubview:transitionView];
     
