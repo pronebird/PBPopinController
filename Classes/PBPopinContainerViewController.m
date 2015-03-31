@@ -218,7 +218,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         transitionRect.origin.y -= accessorySize.height;
         transitionRect.size.height += accessorySize.height;
     }
-
+    
     return transitionRect;
 }
 
@@ -260,7 +260,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
             completion();
         }
     };
-
+    
     transitionView.frame = [self _initialFrameForTransitionView:controller];
     
     if(animated) {
@@ -283,7 +283,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
 {
     CGRect initialFrameForTransitionView = [self _initialFrameForTransitionView:controller];
     void(^animations)(void) = ^{
-       transitionView.frame = initialFrameForTransitionView;
+        transitionView.frame = initialFrameForTransitionView;
         
         if(alongsideAnimation) {
             alongsideAnimation();
@@ -380,7 +380,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     
     accessoryRect.origin = CGPointZero;
     accessoryRect.size = accessorySize;
-
+    
     contentRect.origin = CGPointMake(0, accessorySize.height);
     contentRect.size = contentSize;
     
@@ -421,7 +421,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         [NSException raise:@"PBPopinContainerViewControllerHierarchyInconsistencyException"
                     format:@"Popin accessory view must not be in view hierarchy. Please create an individual instance of accessory view."];
     }
-
+    
     [self addChildViewController:controller];
     [transitionView addSubview:controller.view];
     [controller didMoveToParentViewController:self];
