@@ -70,7 +70,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
                       completion:(void(^)(void))completion
 {
     UIViewController* presentedContentController = self.contentViewController;
-    _PBPopinTransitionView* transitionView = self.transitionView;
+    UIView* transitionView = self.transitionView;
     
     // check if equal
     if(contentViewController == presentedContentController) {
