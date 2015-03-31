@@ -9,6 +9,7 @@
 #import "TableViewController.h"
 #import "DatePickerViewController.h"
 #import "CountryPickerViewController.h"
+#import "PictureViewController.h"
 #import "PBPopinController.h"
 #import "UIViewController+PopinController.h"
 
@@ -37,8 +38,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier isEqualToString:@"ChooseDate"]) {
         [self handleDatePickerSegue:segue];
-    } else if([segue.identifier isEqualToString:@"ChooseCategory"]) {
+    }
+    else if([segue.identifier isEqualToString:@"ChooseCategory"]) {
         [self handleCategoryPickerSegue:segue];
+    }
+    else if([segue.identifier isEqualToString:@"ChoosePhoto"]) {
+        [self handlePicturePickerSegue:segue];
     }
 }
 
@@ -84,6 +89,14 @@
     
     // setup accessory view
     countryPickerController.popinAccessoryView = self.popinAccessory;
+}
+
+- (void)handlePicturePickerSegue:(UIStoryboardSegue *)segue {
+    PictureViewController *pictureController = (PictureViewController *)segue.destinationViewController;
+    
+    pictureController.didFinishPickingPhoto = ^(UIImage *image) {
+        self.photoImageView.image = image;
+    };
 }
 
 - (void)updateSelectedDate:(NSDate*)date {

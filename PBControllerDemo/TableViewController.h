@@ -16,6 +16,7 @@
 @property (weak) IBOutlet UIToolbar* keyboardAccessory;
 @property (strong) IBOutlet UIBarButtonItem* todayAccessoryItem;
 @property (weak) IBOutlet UIToolbar* popinAccessory;
+@property (weak) IBOutlet UIImageView *photoImageView;
 
 @property NSDate* selectedDate;
 @property NSString* selectedCountry;

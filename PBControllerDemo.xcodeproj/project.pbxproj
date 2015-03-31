@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		583CA7871ACAE75900C560B0 /* PBModalPopinSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 583CA7861ACAE75900C560B0 /* PBModalPopinSegue.m */; };
+		583CA78A1ACAE9A300C560B0 /* PictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583CA7891ACAE9A300C560B0 /* PictureViewController.m */; };
 		58B964E11A9B485C00C8E8AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B964E01A9B485C00C8E8AD /* main.m */; };
 		58B964E41A9B485C00C8E8AD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B964E31A9B485C00C8E8AD /* AppDelegate.m */; };
 		58B964EA1A9B485C00C8E8AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58B964E81A9B485C00C8E8AD /* Main.storyboard */; };
@@ -36,6 +37,8 @@
 /* Begin PBXFileReference section */
 		583CA7851ACAE75900C560B0 /* PBModalPopinSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PBModalPopinSegue.h; path = Classes/PBModalPopinSegue.h; sourceTree = SOURCE_ROOT; };
 		583CA7861ACAE75900C560B0 /* PBModalPopinSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBModalPopinSegue.m; path = Classes/PBModalPopinSegue.m; sourceTree = SOURCE_ROOT; };
+		583CA7881ACAE9A300C560B0 /* PictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PictureViewController.h; sourceTree = "<group>"; };
+		583CA7891ACAE9A300C560B0 /* PictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PictureViewController.m; sourceTree = "<group>"; };
 		58B964DB1A9B485C00C8E8AD /* PBControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PBControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58B964DF1A9B485C00C8E8AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58B964E01A9B485C00C8E8AD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -111,6 +114,8 @@
 				58B965151A9B4AF200C8E8AD /* DatePickerViewController.m */,
 				58B9651A1A9B4E0800C8E8AD /* CountryPickerViewController.h */,
 				58B9651B1A9B4E0800C8E8AD /* CountryPickerViewController.m */,
+				583CA7881ACAE9A300C560B0 /* PictureViewController.h */,
+				583CA7891ACAE9A300C560B0 /* PictureViewController.m */,
 				58B964E81A9B485C00C8E8AD /* Main.storyboard */,
 				58B964EB1A9B485C00C8E8AD /* Images.xcassets */,
 				58B964ED1A9B485C00C8E8AD /* LaunchScreen.xib */,
@@ -272,6 +277,7 @@
 				58B9650E1A9B489F00C8E8AD /* PBPopinContainerViewController.m in Sources */,
 				58B965161A9B4AF200C8E8AD /* DatePickerViewController.m in Sources */,
 				58B964E11A9B485C00C8E8AD /* main.m in Sources */,
+				583CA78A1ACAE9A300C560B0 /* PictureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

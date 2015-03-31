@@ -52,7 +52,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="Hj9-Nu-AA4" kind="custom" identifier="ChooseDate" customClass="PBModalPopinSegue" id="MG0-x0-X3I"/>
+                                            <segue destination="Hj9-Nu-AA4" kind="custom" identifier="ChooseDate" customClass="PBPopinSegue" id="MG0-x0-X3I"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Tqn-5I-iTd">
@@ -76,6 +76,36 @@
                                             <segue destination="eOP-4B-4eL" kind="custom" identifier="ChooseCategory" customClass="PBPopinSegue" id="gvT-Eh-RUQ"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="JzJ-Gr-MHy">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JzJ-Gr-MHy" id="r9E-aT-jE9">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose your photo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNX-p9-5Ko">
+                                                    <rect key="frame" x="226.5" y="11" width="147.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zEA-Gt-Fws">
+                                                    <rect key="frame" x="186.5" y="6" width="32" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="32" id="2GR-1u-nql"/>
+                                                        <constraint firstAttribute="height" constant="32" id="tpz-66-dfg"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="oNX-p9-5Ko" firstAttribute="centerY" secondItem="zEA-Gt-Fws" secondAttribute="centerY" id="0wn-ov-fOs"/>
+                                                <constraint firstAttribute="centerX" secondItem="oNX-p9-5Ko" secondAttribute="centerX" id="Cxk-Ot-5Ck"/>
+                                                <constraint firstItem="oNX-p9-5Ko" firstAttribute="leading" secondItem="zEA-Gt-Fws" secondAttribute="trailing" constant="8" id="UWy-Iv-eed"/>
+                                                <constraint firstAttribute="centerY" secondItem="oNX-p9-5Ko" secondAttribute="centerY" id="avR-Ur-Dgc"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="JUN-Ut-BBE" kind="custom" identifier="ChoosePhoto" customClass="PBModalPopinSegue" id="s46-lg-9vL"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -89,6 +119,7 @@
                         <outlet property="countryLabel" destination="yKw-NZ-XeG" id="9oM-1z-rt4"/>
                         <outlet property="dateLabel" destination="ksd-hb-rZf" id="e43-cO-w68"/>
                         <outlet property="keyboardAccessory" destination="e5j-1N-nMV" id="SbQ-WR-aWm"/>
+                        <outlet property="photoImageView" destination="zEA-Gt-Fws" id="PrW-GD-Ywc"/>
                         <outlet property="popinAccessory" destination="gJF-1L-V2m" id="hTX-Sb-cge"/>
                         <outlet property="textField" destination="0ul-Yk-nrV" id="d57-o5-Kbd"/>
                         <outlet property="todayAccessoryItem" destination="hG0-Iv-wCF" id="VWP-kd-viE"/>
@@ -166,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9eU-D6-zAd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1416" y="161"/>
+            <point key="canvasLocation" x="1416" y="21"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bTo-cA-Hdd">
@@ -183,6 +214,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3CE-78-JIX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-186" y="331"/>
+        </scene>
+        <!--Picture View Controller-->
+        <scene sceneID="7rJ-0i-dPK">
+            <objects>
+                <viewController id="JUN-Ut-BBE" customClass="PictureViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="crn-Wb-zNI"/>
+                        <viewControllerLayoutGuide type="bottom" id="O2c-HA-xaO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="N3o-Ae-42U">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dVG-mw-DpJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1416" y="599"/>
         </scene>
         <!--Country Picker View Controller-->
         <scene sceneID="aZL-UY-VIq">
@@ -219,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fba-J6-KrC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1416" y="501"/>
+            <point key="canvasLocation" x="1416" y="305"/>
         </scene>
     </scenes>
 </document>
