@@ -135,12 +135,69 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                  completion:completion];
 }
 
+- (void)dismissAnimated:(BOOL)animated completion:(void(^)(void))completion {
+    NSAssert(self.presented, @"Unbalanced call to dismiss PopinController.");
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self];
+    
+    self.presented = NO;
+    [self _removeDismissOnScrollHandler];
+    [self _removeDismissOnBackdropTap];
+    
+    [self.containerController setContentViewController:nil
+                                              animated:animated
+                                    alongsideAnimation:^{
+                                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                                        
+                                        // fade backdrop
+                                        strongSelf.containerController.showsBackdrop = NO;
+                                        
+                                        // adjust scroll view insets
+                                        [strongSelf _adjustScrollViewContentInsets:NO
+                                                              sourceViewController:strongSelf.sourceViewController
+                                                             contentViewController:strongSelf.contentViewController];
+                                    }
+                                            completion:^{
+                                                __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                
+                                                // check if still dismissed
+                                                if(!strongSelf.presented) {
+                                                    [strongSelf.class popinWindow].rootViewController = nil;
+                                                    strongSelf.containerController = nil;
+                                                    strongSelf.sourceView = nil;
+                                                    strongSelf.contentViewController.popinController = nil;
+                                                    
+                                                    [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+                                                    [strongSelf _hidePopinWindow];
+                                                    
+                                                    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+                                                }
+                                                
+                                                if(completion) {
+                                                    completion();
+                                                }
+                                            }];
+}
+
+#pragma mark - Private
+
+- (void)_showPopinWindow {
+    [self.class popinWindow].hidden = NO;
+    [[self.class popinWindow] makeKeyAndVisible];
+}
+
+- (void)_hidePopinWindow {
+    [self.class popinWindow].hidden = YES;
+}
+
 - (void)_presentWithContentViewController:(UIViewController*)contentViewController
-                      fromViewController:(UIViewController*)sourceViewController
-                                fromView:(UIView *)fromView
-                                 modal:(BOOL)modal
-                                animated:(BOOL)animated
-                              completion:(void(^)(void))completion
+                       fromViewController:(UIViewController*)sourceViewController
+                                 fromView:(UIView *)fromView
+                                    modal:(BOOL)modal
+                                 animated:(BOOL)animated
+                               completion:(void(^)(void))completion
 {
     NSParameterAssert(contentViewController);
     NSParameterAssert(sourceViewController);
@@ -148,7 +205,7 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     
     // we present without animation only when we replace already presented controller
     BOOL shouldReplaceContent = self.presented;
-
+    
     // set touches passthrough
     [self.class popinWindow].passthroughTouches = !modal;
     
@@ -246,63 +303,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
                                                     
                                                 }];
     }
-}
-
-- (void)dismissAnimated:(BOOL)animated completion:(void(^)(void))completion {
-    NSAssert(self.presented, @"Unbalanced call to dismiss PopinController.");
-    
-    __weak typeof(self) weakSelf = self;
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self];
-    
-    self.presented = NO;
-    [self _removeDismissOnScrollHandler];
-    [self _removeDismissOnBackdropTap];
-    
-    [self.containerController setContentViewController:nil
-                                              animated:animated
-                                    alongsideAnimation:^{
-                                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                                        
-                                        // fade backdrop
-                                        strongSelf.containerController.showsBackdrop = NO;
-                                        
-                                        // adjust scroll view insets
-                                        [strongSelf _adjustScrollViewContentInsets:NO
-                                                              sourceViewController:strongSelf.sourceViewController
-                                                             contentViewController:strongSelf.contentViewController];
-                                    }
-                                            completion:^{
-                                                __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                
-                                                // check if still dismissed
-                                                if(!strongSelf.presented) {
-                                                    [strongSelf.class popinWindow].rootViewController = nil;
-                                                    strongSelf.containerController = nil;
-                                                    strongSelf.sourceView = nil;
-                                                    strongSelf.contentViewController.popinController = nil;
-                                                    
-                                                    [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-                                                    [strongSelf _hidePopinWindow];
-                                                    
-                                                    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
-                                                }
-                                                
-                                                if(completion) {
-                                                    completion();
-                                                }
-                                            }];
-}
-
-#pragma mark - Private
-
-- (void)_showPopinWindow {
-    [self.class popinWindow].hidden = NO;
-    [[self.class popinWindow] makeKeyAndVisible];
-}
-
-- (void)_hidePopinWindow {
-    [self.class popinWindow].hidden = YES;
 }
 
 #pragma mark - UIScrollView: adjust content insets
