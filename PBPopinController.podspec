@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name     = 'PBPopinController'
-  s.version  = '0.2.0'
+  s.version  = '0.3.0'
   s.license  = 'MIT'
-  s.summary  = 'Custom controller that pops from the bottom, exactly like keyboard.'
+  s.summary  = 'Custom container controller with keyboard-like presentation.'
   s.homepage = 'https://github.com/pronebird/PBPopinController'
   s.authors  = {
     'Andrej Mihajlov' => 'and@codeispoetry.ru'
