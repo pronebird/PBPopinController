@@ -1,0 +1,12 @@
+= 0.3.0 (2015-03-31)
+
+* Add modal popin presentation
+* Add modal popin segue
+* Add tap-to-dismiss recognizer on backdrop
+* Animate frame changes when replacing content controller
+* Swizzle prepareForSegue to capture sender view (needed for scroll)
+* Automatically scroll to sender view in scroll views
+* Adjust scroll view content insets to accomodate pop-in controller
+
+
+
