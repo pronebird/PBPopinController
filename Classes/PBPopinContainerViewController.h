@@ -34,6 +34,14 @@
 - (instancetype)initWithContentViewController:(UIViewController*)contentViewController NS_DESIGNATED_INITIALIZER;
 
 /**
+ *  Animate backdrop.
+ *
+ *  @param showsBackdrop fade in or out
+ *  @param animated      use animations or not
+ */
+- (void)setShowsBackdrop:(BOOL)showsBackdrop animated:(BOOL)animated;
+
+/**
  *  Set content view controller.
  *
  *  @param contentViewController an instance of content view controller

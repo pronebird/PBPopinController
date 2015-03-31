@@ -64,6 +64,25 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     self.backdropView.backgroundColor = backgroundColor;
 }
 
+- (void)setShowsBackdrop:(BOOL)showsBackdrop animated:(BOOL)animated {
+    void(^animationBlock)(void) = ^{
+        [self setShowsBackdrop:showsBackdrop];
+    };
+    
+    if(animated) {
+        [UIView animateWithDuration:[self _transitionDuration]
+                              delay:0.0
+                            options:[self _animationOptions]
+                         animations:^{
+                             [self setShowsBackdrop:showsBackdrop];
+                         }
+                         completion:^(BOOL finished) {}];
+    }
+    else {
+        animationBlock();
+    }
+}
+
 - (void)setContentViewController:(UIViewController *)contentViewController
                         animated:(BOOL)animated
               alongsideAnimation:(void(^)(void))alongsideAnimation
@@ -243,7 +262,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
                          animations:animations
                          completion:animationCompletion];
     } else {
-        [UIView performWithoutAnimation:animations];
+        animations();
         animationCompletion(YES);
     }
 }
@@ -276,7 +295,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
                          animations:animations
                          completion:animationCompletion];
     } else {
-        [UIView performWithoutAnimation:animations];
+        animations();
         animationCompletion(YES);
     }
 }
