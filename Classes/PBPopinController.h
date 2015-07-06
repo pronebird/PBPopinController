@@ -11,22 +11,22 @@
 /**
  *  A notification sent before controller appears.
  */
-extern NSString* const PBPopinControllerWillAppearNotification;
+extern NSString * const PBPopinControllerWillAppearNotification;
 
 /**
  *  A notification sent after controller appears.
  */
-extern NSString* const PBPopinControllerDidAppearNotification;
+extern NSString * const PBPopinControllerDidAppearNotification;
 
 /**
  *  A notification sent before controller disappears.
  */
-extern NSString* const PBPopinControllerWillDisappearNotification;
+extern NSString * const PBPopinControllerWillDisappearNotification;
 
 /**
  *  A notification sent after controller disappears.
  */
-extern NSString* const PBPopinControllerDidDisappearNotification;
+extern NSString * const PBPopinControllerDidDisappearNotification;
 
 
 /**
