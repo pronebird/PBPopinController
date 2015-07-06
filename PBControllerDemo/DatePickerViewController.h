@@ -10,10 +10,10 @@
 
 @interface DatePickerViewController : UIViewController
 
-@property (weak) IBOutlet UIDatePicker* datePicker;
+@property (weak) IBOutlet UIDatePicker *datePicker;
 
-@property (nonatomic) NSDate* currentDate;
+@property (nonatomic) NSDate *currentDate;
 
-@property (copy) void(^didChangeDate)(NSDate* date);
+@property (copy) void(^didChangeDate)(NSDate *date);
 
 @end

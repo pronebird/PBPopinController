@@ -10,7 +10,7 @@
 
 @interface CountryPickerViewController()
 
-@property NSArray* countryList;
+@property NSArray *countryList;
 
 @end
 

@@ -10,10 +10,10 @@
 
 @interface CountryPickerViewController : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate>
 
-@property (weak) IBOutlet UIPickerView* pickerView;
+@property (weak) IBOutlet UIPickerView *pickerView;
 
-@property NSString* initialCountry;
+@property NSString *initialCountry;
 
-@property (copy) void(^didSelectCountry)(NSString* country);
+@property (copy) void(^didSelectCountry)(NSString *country);
 
 @end
