@@ -31,7 +31,7 @@
  *
  *  @return an instance of PopinContainerViewController
  */
-- (instancetype)initWithContentViewController:(UIViewController*)contentViewController NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithContentViewController:(UIViewController*)contentViewController;
 
 /**
  *  Animate backdrop.
