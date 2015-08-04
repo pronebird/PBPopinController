@@ -14,6 +14,8 @@ NSString* const PBPopinControllerDidAppearNotification = @"PBPopinControllerDidA
 NSString* const PBPopinControllerWillDisappearNotification = @"PBPopinControllerWillDisappearNotification";
 NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerDidDisappearNotification";
 
+NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
+
 @interface _PBPopinWindow : UIWindow
 
 @property BOOL passthroughTouches;
@@ -140,7 +142,9 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     
     __weak typeof(self) weakSelf = self;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self];
+    CGRect initialContentViewRect = [self.containerController initialFrameForTransitionView:self.contentViewController];
+    NSDictionary *userInfo = @{ PBPopinControllerFinalFrameUserInfoKey: [NSValue valueWithCGRect:initialContentViewRect] };
+    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self userInfo:userInfo];
     
     self.presented = NO;
     [self _removeDismissOnScrollHandler];
@@ -274,8 +278,6 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
     }
     else
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self];
-        
         self.presented = YES;
         
         self.contentViewController = contentViewController;
@@ -285,6 +287,10 @@ NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerD
         self.containerController = [[PBPopinContainerViewController alloc] initWithContentViewController:nil];
         [self.class popinWindow].rootViewController = self.containerController;
         [self _showPopinWindow];
+        
+        CGRect finalContentViewRect = [self.containerController finalFrameForTransitionView:self.contentViewController];
+        NSDictionary *userInfo = @{ PBPopinControllerFinalFrameUserInfoKey: [NSValue valueWithCGRect:finalContentViewRect] };
+        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self userInfo:userInfo];
         
         __weak typeof(self) weakSelf = self;
         

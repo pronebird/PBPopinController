@@ -28,6 +28,11 @@ extern NSString * const PBPopinControllerWillDisappearNotification;
  */
 extern NSString * const PBPopinControllerDidDisappearNotification;
 
+/**
+ *  A key for final rect in userInfo dictionary.
+ */
+extern NSString * const PBPopinControllerFinalFrameUserInfoKey;
+
 
 /**
  *  @abstract Popin controller.

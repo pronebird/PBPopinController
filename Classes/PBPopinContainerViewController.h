@@ -63,4 +63,13 @@
  */
 - (CGRect)finalFrameForTransitionView:(UIViewController*)controller;
 
+/**
+ *  Frame of content view controller when offscreen.
+ *
+ *  @param controller a content view controller
+ *
+ *  @return CGRect
+ */
+- (CGRect)initialFrameForTransitionView:(UIViewController*)controller;
+
 @end

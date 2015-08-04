@@ -219,7 +219,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     return transitionRect;
 }
 
-- (CGRect)_initialFrameForTransitionView:(UIViewController*)controller {
+- (CGRect)initialFrameForTransitionView:(UIViewController*)controller {
     CGRect transitionRect = [self finalFrameForTransitionView:controller];
     
     transitionRect.origin.y = CGRectGetHeight(self.view.bounds);
@@ -255,7 +255,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
         }
     };
 
-    self.transitionView.frame = [self _initialFrameForTransitionView:controller];
+    self.transitionView.frame = [self initialFrameForTransitionView:controller];
     
     if(animated) {
         [UIView animateWithDuration:[self _transitionDuration]
@@ -274,7 +274,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
                    alongsideAnimation:(void(^)(void))alongsideAnimation
                            completion:(void(^)(BOOL finished))completion
 {
-    CGRect initialFrameForTransitionView = [self _initialFrameForTransitionView:controller];
+    CGRect initialFrameForTransitionView = [self initialFrameForTransitionView:controller];
     void(^animations)(void) = ^{
        self.transitionView.frame = initialFrameForTransitionView;
         
@@ -330,6 +330,10 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
  *  @return content controller size
  */
 - (CGSize)_sizeForContentController:(UIViewController *)controller {
+    // force viewDidLoad because sometimes preferredContentSize is calculated
+    // based on intrinsic content size of elements inside of view
+    [controller view];
+    
     CGSize preferredSize = [controller preferredContentSize];
     
     if(CGSizeEqualToSize(preferredSize, CGSizeZero)) {
