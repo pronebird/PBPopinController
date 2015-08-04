@@ -81,23 +81,6 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
     return popinWindow;
 }
 
-- (instancetype)init {
-    if(self = [super init]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillShowNotification object:nil];
-    }
-    return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-}
-
-- (void)keyboardWillAppear:(NSNotification*)notification {
-    if(self.presented) {
-        [self dismissAnimated:YES completion:nil];
-    }
-}
-
 - (void)presentModalWithContentViewController:(UIViewController*)contentViewController
                            fromViewController:(UIViewController*)sourceViewController
                                      animated:(BOOL)animated
@@ -105,8 +88,7 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
 {
     [self _presentWithContentViewController:contentViewController
                          fromViewController:sourceViewController
-                                   fromView:nil
-                                    modal:YES
+                                      modal:YES
                                    animated:animated
                                  completion:completion];
 }
@@ -117,28 +99,18 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
                               completion:(void(^)(void))completion {
     [self _presentWithContentViewController:contentViewController
                          fromViewController:sourceViewController
-                                   fromView:nil
-                                    modal:NO
-                                   animated:animated
-                                 completion:completion];
-}
-
-- (void)presentWithContentViewController:(UIViewController*)contentViewController
-                      fromViewController:(UIViewController*)sourceViewController
-                                fromView:(UIView *)fromView
-                                animated:(BOOL)animated
-                              completion:(void(^)(void))completion
-{
-    [self _presentWithContentViewController:contentViewController
-                         fromViewController:sourceViewController
-                                   fromView:fromView
-                                    modal:NO
+                                      modal:NO
                                    animated:animated
                                  completion:completion];
 }
 
 - (void)dismissAnimated:(BOOL)animated completion:(void(^)(void))completion {
-    NSAssert(self.presented, @"Unbalanced call to dismiss PopinController.");
+    if(!self.presented) {
+        if(completion) {
+            completion();
+        }
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
     
@@ -157,32 +129,26 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
                                         
                                         // fade backdrop
                                         strongSelf.containerController.showsBackdrop = NO;
+                                    } completion:^{
+                                        __strong typeof(weakSelf) strongSelf = weakSelf;
                                         
-                                        // adjust scroll view insets
-                                        [strongSelf _adjustScrollViewContentInsets:NO
-                                                              sourceViewController:strongSelf.sourceViewController
-                                                             contentViewController:strongSelf.contentViewController];
-                                    }
-                                            completion:^{
-                                                __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                
-                                                // check if still dismissed
-                                                if(!strongSelf.presented) {
-                                                    [strongSelf.class popinWindow].rootViewController = nil;
-                                                    strongSelf.containerController = nil;
-                                                    strongSelf.sourceView = nil;
-                                                    strongSelf.contentViewController.popinController = nil;
-                                                    
-                                                    [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-                                                    [strongSelf _hidePopinWindow];
-                                                    
-                                                    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
-                                                }
-                                                
-                                                if(completion) {
-                                                    completion();
-                                                }
-                                            }];
+                                        // check if still dismissed
+                                        if(!strongSelf.presented) {
+                                            [strongSelf.class popinWindow].rootViewController = nil;
+                                            strongSelf.containerController = nil;
+                                            strongSelf.sourceView = nil;
+                                            strongSelf.contentViewController.popinController = nil;
+                                            
+                                            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+                                            [strongSelf _hidePopinWindow];
+                                            
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+                                        }
+                                        
+                                        if(completion) {
+                                            completion();
+                                        }
+                                    }];
 }
 
 #pragma mark - Private
@@ -198,14 +164,12 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
 
 - (void)_presentWithContentViewController:(UIViewController*)contentViewController
                        fromViewController:(UIViewController*)sourceViewController
-                                 fromView:(UIView *)fromView
                                     modal:(BOOL)modal
                                  animated:(BOOL)animated
                                completion:(void(^)(void))completion
 {
     NSParameterAssert(contentViewController);
     NSParameterAssert(sourceViewController);
-    NSParameterAssert(!fromView || [fromView isKindOfClass:UIView.class]);
     
     // we present without animation only when we replace already presented controller
     BOOL shouldReplaceContent = self.presented;
@@ -217,9 +181,6 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
     [self _removeDismissOnBackdropTap];
     [self _removeDismissOnScrollHandler];
     
-    // dismiss keyboard
-    [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
-    
     // assign popinController to content controller
     contentViewController.popinController = self;
     
@@ -227,16 +188,6 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
         // backdrop will be animated alongside
         // and animated individually when replacing controller
         [self.containerController setShowsBackdrop:modal animated:shouldReplaceContent];
-        
-        // adjust scroll view insets
-        [self _adjustScrollViewContentInsets:YES
-                        sourceViewController:sourceViewController
-                       contentViewController:contentViewController];
-        
-        // adjust scroll view content offset
-        [self _adjustScrollViewContentOffset:sourceViewController
-                       contentViewController:contentViewController
-                                    fromView:fromView];
     };
     
     void(^animationFinished)(void) = ^{
@@ -265,7 +216,6 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
         
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
-        self.sourceView = fromView;
         
         [self.containerController setContentViewController:contentViewController
                                                   animated:NO
@@ -282,7 +232,6 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
         
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
-        self.sourceView = fromView;
         
         self.containerController = [[PBPopinContainerViewController alloc] initWithContentViewController:nil];
         [self.class popinWindow].rootViewController = self.containerController;
@@ -306,71 +255,8 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
                                                     }
                                                     
                                                     animationFinished();
-                                                    
                                                 }];
     }
-}
-
-#pragma mark - UIScrollView: adjust content insets
-
-- (void)_adjustScrollViewContentOffset:(UIViewController *)sourceViewController
-                 contentViewController:(UIViewController *)contentViewController
-                              fromView:(UIView *)fromView
-{
-    if(![sourceViewController.view isKindOfClass:UIScrollView.class]) {
-        return;
-    }
-    
-    UIScrollView *scrollView = (UIScrollView *)sourceViewController.view;
-    CGRect transitionViewRect = [self.containerController finalFrameForTransitionView:contentViewController];
-    CGRect fromViewRect = [fromView convertRect:fromView.bounds toView:nil];
-    
-    if(CGRectIntersectsRect(fromViewRect, transitionViewRect)) {
-        CGPoint scrollOffset = scrollView.contentOffset;
-        scrollOffset.y += CGRectGetMaxY(fromViewRect) - CGRectGetMinY(transitionViewRect);
-        [scrollView setContentOffset:scrollOffset animated:NO];
-    }
-}
-
-- (void)_adjustScrollViewContentInsets:(BOOL)presenting
-                  sourceViewController:(UIViewController *)sourceViewController
-                 contentViewController:(UIViewController *)contentViewController
-{
-    if(![sourceViewController.view isKindOfClass:UIScrollView.class]) {
-        return;
-    }
-    
-    UIEdgeInsets popinContentInsets = self.scrollViewContentInsets;
-    UIScrollView *scrollView = (UIScrollView *)sourceViewController.view;
-    UIEdgeInsets scrollContentInset = scrollView.contentInset;
-    
-    if(presenting) {
-        CGRect transitionViewRect = [self.containerController finalFrameForTransitionView:contentViewController];
-        
-        // substract previous inset
-        scrollContentInset.bottom -= popinContentInsets.bottom;
-        
-        // calculate new inset
-        popinContentInsets.bottom = CGRectGetHeight(transitionViewRect);
-        
-        // add new inset
-        scrollContentInset.bottom += popinContentInsets.bottom;
-        
-        // save new insets
-        self.scrollViewContentInsets = popinContentInsets;
-    }
-    else {
-        // substract previous inset
-        scrollContentInset.bottom -= popinContentInsets.bottom;
-        
-        // reset saved inset
-        popinContentInsets.bottom = 0;
-        
-        // save new insets
-        self.scrollViewContentInsets = popinContentInsets;
-    }
-    
-    scrollView.contentInset = scrollContentInset;
 }
 
 #pragma mark - BackdropView: dismiss on tap

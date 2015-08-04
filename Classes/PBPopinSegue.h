@@ -12,9 +12,4 @@
  */
 @interface PBPopinSegue : UIStoryboardSegue
 
-/**
- *  Sender view. Relevant for scroll views.
- */
-@property UIView *sender;
-
 @end

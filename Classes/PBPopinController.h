@@ -45,11 +45,6 @@ extern NSString * const PBPopinControllerFinalFrameUserInfoKey;
 @property (weak, readonly) UIViewController* sourceViewController;
 
 /**
- *  A source view.
- */
-@property (weak, readonly) UIView* sourceView;
-
-/**
  *  A content view controller displayed in popin.
  */
 @property (readonly) UIViewController* contentViewController;
@@ -91,22 +86,6 @@ extern NSString * const PBPopinControllerFinalFrameUserInfoKey;
  */
 - (void)presentWithContentViewController:(UIViewController*)contentViewController
                       fromViewController:(UIViewController*)sourceViewController
-                                animated:(BOOL)animated
-                              completion:(void(^)(void))completion;
-
-/**
- *  @abstract Present popin controller.
- *  @discussion You can call present multiple times, this will replace child controller within presented popin controller.
- *
- *  @param presentedViewController a content controller that will be displayed in popin controller
- *  @param sourceViewController    a source view controller you request presentation from
- *  @param fromView                a sender view
- *  @param animated                whether to animate transition
- *  @param completion              a completion handler
- */
-- (void)presentWithContentViewController:(UIViewController*)contentViewController
-                      fromViewController:(UIViewController*)sourceViewController
-                                fromView:(UIView *)fromView
                                 animated:(BOOL)animated
                               completion:(void(^)(void))completion;
 

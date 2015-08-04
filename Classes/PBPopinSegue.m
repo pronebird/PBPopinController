@@ -13,7 +13,6 @@
 - (void)perform {
     [[PBPopinController sharedPopinController] presentWithContentViewController:self.destinationViewController
                                                              fromViewController:self.sourceViewController
-                                                                       fromView:self.sender
                                                                        animated:YES
                                                                      completion:nil];
 }
