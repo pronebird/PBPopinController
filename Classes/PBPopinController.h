@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIViewController+PopinController.h"
 
 /**
  *  A notification sent before controller appears.

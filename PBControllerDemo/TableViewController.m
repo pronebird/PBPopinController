@@ -11,7 +11,6 @@
 #import "CountryPickerViewController.h"
 #import "PictureViewController.h"
 #import "PBPopinController.h"
-#import "UIViewController+PopinController.h"
 
 @interface TableViewController()
 
