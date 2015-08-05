@@ -7,13 +7,12 @@ Custom controller that pops from the bottom, exactly like keyboard.
 #### Features
 
 1. Content controller support.
-2. Accessory view support.
-3. Non-modal, creates its own UIWindow and passes through all user interactions within unoccupied by content area.
-4. Plays nice with keyboard, e.g. hides itself if keyboard shows up, and vise-versa.
-5. Dismisses on scroll if presented from table or collection view controller.
-6. Uses same animation curve and duration as keyboard.
-7. Knows how to swap content controller if already presented, without unnecessary animations.
-8. Works with storyboards, use custom `PBPopinSegue`.
+1. Accessory view support.
+1. Non-modal, creates its own UIWindow and passes through all user interactions within unoccupied by content area.
+1. Dismisses itself on scroll if presented from table or collection view controller.
+1. Uses same animation curve and duration as keyboard.
+1. Knows how to swap content controller if already presented, without unnecessary animations.
+1. Works with storyboards, use custom `PBPopinSegue` or `PBModalPopinSegue`.
 
 #### Known issues
 
