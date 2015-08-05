@@ -54,7 +54,6 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
 
 @property PBPopinContainerViewController* containerController;
 @property (weak, readwrite) UIViewController* sourceViewController;
-@property (weak, readwrite) UIView* sourceView;
 @property (readwrite) UIViewController* contentViewController;
 @property (readwrite) BOOL presented;
 @property UITapGestureRecognizer *dismissTapGestureRecognizer;
@@ -137,7 +136,6 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
                                         if(!strongSelf.presented) {
                                             [strongSelf.class popinWindow].rootViewController = nil;
                                             strongSelf.containerController = nil;
-                                            strongSelf.sourceView = nil;
                                             strongSelf.contentViewController.popinController = nil;
                                             
                                             [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
