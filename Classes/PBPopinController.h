@@ -5,7 +5,6 @@
 //  Copyright (c) 2015 pronebird. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 /**
