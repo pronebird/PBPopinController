@@ -328,7 +328,12 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
 
 - (void)_handlePanGesture:(UIPanGestureRecognizer*)recognizer {
     if(recognizer.state == UIGestureRecognizerStateBegan) {
-        [self dismissAnimated:YES completion:nil];
+        UIScrollView *scrollView = (UIScrollView *)recognizer.view;
+        
+        // @TOOD: support interactive mode
+        if(scrollView.keyboardDismissMode != UIScrollViewKeyboardDismissModeNone) {
+            [self dismissAnimated:YES completion:nil];
+        }
     }
 }
 
