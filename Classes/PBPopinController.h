@@ -29,9 +29,24 @@ extern NSString * const PBPopinControllerWillDisappearNotification;
 extern NSString * const PBPopinControllerDidDisappearNotification;
 
 /**
+ *  A key for initial rect in userInfo dictionary.
+ */
+extern NSString* const PBPopinControllerInitialFrameUserInfoKey;
+
+/**
  *  A key for final rect in userInfo dictionary.
  */
 extern NSString * const PBPopinControllerFinalFrameUserInfoKey;
+
+/**
+ *  A key for animation duration in userInfo dictionary.
+ */
+extern NSString* const PBPopinControllerAnimationDurationUserInfoKey;
+
+/**
+ *  A key for animation curve in userInfo dictionary.
+ */
+extern NSString* const PBPopinControllerAnimationCurveUserInfoKey;
 
 
 /**

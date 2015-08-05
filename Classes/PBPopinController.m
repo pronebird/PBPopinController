@@ -14,7 +14,10 @@ NSString* const PBPopinControllerDidAppearNotification = @"PBPopinControllerDidA
 NSString* const PBPopinControllerWillDisappearNotification = @"PBPopinControllerWillDisappearNotification";
 NSString* const PBPopinControllerDidDisappearNotification = @"PBPopinControllerDidDisappearNotification";
 
+NSString* const PBPopinControllerInitialFrameUserInfoKey = @"initialFrame";
 NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
+NSString* const PBPopinControllerAnimationDurationUserInfoKey = @"animationDuration";
+NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
 
 @interface _PBPopinWindow : UIWindow
 
@@ -114,9 +117,7 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
     
     __weak typeof(self) weakSelf = self;
     
-    CGRect initialContentViewRect = [self.containerController initialFrameForTransitionView:self.contentViewController];
-    NSDictionary *userInfo = @{ PBPopinControllerFinalFrameUserInfoKey: [NSValue valueWithCGRect:initialContentViewRect] };
-    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:self userInfo:userInfo];
+    [self _sendControllerWillDisappearNotification:animated];
     
     self.presented = NO;
     [self _removeDismissOnScrollHandler];
@@ -142,7 +143,7 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
                                             [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
                                             [strongSelf _hidePopinWindow];
                                             
-                                            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:strongSelf];
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:nil];
                                         }
                                         
                                         if(completion) {
@@ -237,9 +238,7 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
         [self.class popinWindow].rootViewController = self.containerController;
         [self _showPopinWindow];
         
-        CGRect finalContentViewRect = [self.containerController finalFrameForTransitionView:self.contentViewController];
-        NSDictionary *userInfo = @{ PBPopinControllerFinalFrameUserInfoKey: [NSValue valueWithCGRect:finalContentViewRect] };
-        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:self userInfo:userInfo];
+        [self _sendControllerWillAppearNotication:animated];
         
         __weak typeof(self) weakSelf = self;
         
@@ -251,12 +250,47 @@ NSString* const PBPopinControllerFinalFrameUserInfoKey = @"finalFrame";
                                                     
                                                     // check if still presented
                                                     if(strongSelf.presented) {
-                                                        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:strongSelf];
+                                                        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:nil];
                                                     }
                                                     
                                                     animationFinished();
                                                 }];
     }
+}
+
+#pragma mark - Notifications
+
+- (NSDictionary *)_transitionInfoForUserInfoDictionary:(BOOL)isAnimatedTransition {
+    NSMutableDictionary *transitionInfo = [NSMutableDictionary new];
+    
+    transitionInfo[PBPopinControllerAnimationDurationUserInfoKey] = @(isAnimatedTransition ? [self.containerController transitionDuration] : 0);
+    transitionInfo[PBPopinControllerAnimationCurveUserInfoKey] = @(isAnimatedTransition ? [self.containerController transitionAnimationCurve] : 0);
+    
+    return transitionInfo;
+}
+
+- (void)_sendControllerWillAppearNotication:(BOOL)isAnimated {
+    CGRect initialFrame = [self.containerController initialFrameForTransitionView:self.contentViewController];
+    CGRect finalFrame = [self.containerController finalFrameForTransitionView:self.contentViewController];
+    
+    NSDictionary *transitionInfo = [self _transitionInfoForUserInfoDictionary:isAnimated];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:transitionInfo];
+    userInfo[PBPopinControllerInitialFrameUserInfoKey] = [NSValue valueWithCGRect:initialFrame];
+    userInfo[PBPopinControllerFinalFrameUserInfoKey] = [NSValue valueWithCGRect:finalFrame];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillAppearNotification object:nil userInfo:userInfo];
+}
+
+- (void)_sendControllerWillDisappearNotification:(BOOL)isAnimated {
+    CGRect initialFrame = [self.containerController finalFrameForTransitionView:self.contentViewController];
+    CGRect finalFrame = [self.containerController initialFrameForTransitionView:self.contentViewController];
+    
+    NSDictionary *transitionInfo = [self _transitionInfoForUserInfoDictionary:isAnimated];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:transitionInfo];
+    userInfo[PBPopinControllerInitialFrameUserInfoKey] = [NSValue valueWithCGRect:initialFrame];
+    userInfo[PBPopinControllerFinalFrameUserInfoKey] = [NSValue valueWithCGRect:finalFrame];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerWillDisappearNotification object:nil userInfo:userInfo];
 }
 
 #pragma mark - BackdropView: dismiss on tap

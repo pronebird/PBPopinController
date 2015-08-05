@@ -8,7 +8,7 @@
 #import "PBPopinContainerViewController.h"
 #import "UIViewController+PopinController.h"
 
-#define UIViewAnimationOptionCurveKeyboard 7 << 16
+#define UIViewAnimationCurveKeyboard 7
 
 #define MARKER_CLASS(__class, __super) \
     @interface __class : __super @end \
@@ -78,7 +78,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     };
     
     if(animated) {
-        [UIView animateWithDuration:[self _transitionDuration]
+        [UIView animateWithDuration:[self transitionDuration]
                               delay:0.0
                             options:[self _animationOptions]
                          animations:^{
@@ -227,12 +227,16 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     return transitionRect;
 }
 
-- (NSTimeInterval)_transitionDuration {
-    return 0.4;
+- (NSTimeInterval)transitionDuration {
+    return 0.25;
+}
+
+- (UIViewAnimationCurve)transitionAnimationCurve {
+    return UIViewAnimationCurveKeyboard;
 }
 
 - (UIViewAnimationOptions)_animationOptions {
-    return UIViewAnimationOptionCurveKeyboard | UIViewAnimationOptionBeginFromCurrentState;
+    return ([self transitionAnimationCurve] << 16) | UIViewAnimationOptionBeginFromCurrentState;
 }
 
 - (void)_presentContentViewController:(UIViewController *)controller
@@ -258,7 +262,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     self.transitionView.frame = [self initialFrameForTransitionView:controller];
     
     if(animated) {
-        [UIView animateWithDuration:[self _transitionDuration]
+        [UIView animateWithDuration:[self transitionDuration]
                               delay:0.0
                             options:[self _animationOptions]
                          animations:animations
@@ -290,7 +294,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     };
     
     if(animated) {
-        [UIView animateWithDuration:[self _transitionDuration]
+        [UIView animateWithDuration:[self transitionDuration]
                               delay:0.0
                             options:[self _animationOptions]
                          animations:animations
@@ -370,7 +374,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     CGRect transitionRect = [self finalFrameForTransitionView:self.contentViewController];
     
     if(animated) {
-        [UIView animateWithDuration:[self _transitionDuration]
+        [UIView animateWithDuration:[self transitionDuration]
                               delay:0.0
                             options:[self _animationOptions]
                          animations:^{

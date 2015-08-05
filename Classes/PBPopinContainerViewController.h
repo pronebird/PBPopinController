@@ -72,4 +72,18 @@
  */
 - (CGRect)initialFrameForTransitionView:(UIViewController*)controller;
 
+/**
+ *  Animation duration used for transition.
+ *
+ *  @return NSTimeInterval
+ */
+- (NSTimeInterval)transitionDuration;
+
+/**
+ *  Animation curve used for transition.
+ *
+ *  @return UIViewAnimationCurve
+ */
+- (UIViewAnimationCurve)transitionAnimationCurve;
+
 @end
