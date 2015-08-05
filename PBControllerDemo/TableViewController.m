@@ -27,10 +27,6 @@
     [super viewDidLoad];
     
     self.textField.inputAccessoryView = self.keyboardAccessory;
-    
-//    UIEdgeInsets contentInset = self.tableView.contentInset;
-//    contentInset.top = CGRectGetHeight(self.tableView.bounds) * 0.5;
-//    self.tableView.contentInset = contentInset;
 }
 
 #pragma mark - Segue
