@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TableViewController : UITableViewController
+@interface TableViewController : UITableViewController<UITextFieldDelegate>
 
 @property (weak) IBOutlet UILabel* dateLabel;
 @property (weak) IBOutlet UILabel* countryLabel;

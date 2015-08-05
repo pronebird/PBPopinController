@@ -72,6 +72,8 @@
     datePickerController.popinAccessoryView = self.popinAccessory;
     
     self.datePickerController = datePickerController;
+    
+    [self.textField endEditing:YES];
 }
 
 - (void)handleCategoryPickerSegue:(UIStoryboardSegue*)segue {
@@ -89,6 +91,8 @@
     
     // setup accessory view
     countryPickerController.popinAccessoryView = self.popinAccessory;
+    
+    [self.textField endEditing:YES];
 }
 
 - (void)handlePicturePickerSegue:(UIStoryboardSegue *)segue {
@@ -97,6 +101,8 @@
     pictureController.didFinishPickingPhoto = ^(UIImage *image) {
         self.photoImageView.image = image;
     };
+    
+    [self.textField endEditing:YES];
 }
 
 - (void)updateSelectedDate:(NSDate*)date {
@@ -108,6 +114,8 @@
     self.selectedDate = date;
 }
 
+#pragma mark - Actions
+
 - (IBAction)today:(id)sender {
     self.datePickerController.currentDate = [NSDate date];
     [self updateSelectedDate:self.datePickerController.currentDate];
@@ -118,9 +126,14 @@
     [self.tableView endEditing:YES];
     
     // dismiss popin controller
-    if([PBPopinController sharedPopinController].presented) {
-        [[PBPopinController sharedPopinController] dismissAnimated:YES completion:nil];
-    }
+    [[PBPopinController sharedPopinController] dismissAnimated:YES completion:nil];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    // dismiss popin controller
+    [[PBPopinController sharedPopinController] dismissAnimated:YES completion:nil];
 }
 
 @end
