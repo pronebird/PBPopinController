@@ -54,7 +54,7 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
 
 @property PBPopinContainerViewController* containerController;
 @property (weak, readwrite) UIViewController* sourceViewController;
-@property (readwrite) UIViewController* contentViewController;
+@property (weak, readwrite) UIViewController* contentViewController;
 @property (readwrite) BOOL presented;
 @property UITapGestureRecognizer *dismissTapGestureRecognizer;
 

@@ -62,7 +62,7 @@ extern NSString* const PBPopinControllerAnimationCurveUserInfoKey;
 /**
  *  A content view controller displayed in popin.
  */
-@property (readonly) UIViewController* contentViewController;
+@property (weak, readonly) UIViewController* contentViewController;
 
 /**
  *  Indicates whether popin is presented.
