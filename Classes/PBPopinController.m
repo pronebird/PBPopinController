@@ -214,6 +214,8 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
         self.contentViewController = contentViewController;
         self.sourceViewController = sourceViewController;
         
+        self.containerController.sourceViewController = self.sourceViewController;
+        
         [self.containerController setContentViewController:contentViewController
                                                   animated:NO
                                         alongsideAnimation:alongsideAnimation
@@ -231,6 +233,8 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
         self.sourceViewController = sourceViewController;
         
         self.containerController = [[PBPopinContainerViewController alloc] initWithContentViewController:nil];
+        self.containerController.sourceViewController = self.sourceViewController;
+        
         [self.class popinWindow].rootViewController = self.containerController;
         [self _showPopinWindow];
         

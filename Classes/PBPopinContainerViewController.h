@@ -12,12 +12,18 @@
 /**
  *  Current content controller.
  */
-@property (readonly) UIViewController* contentViewController;
+@property (nonatomic, readonly) UIViewController* contentViewController;
+
+/**
+ *  Source controller.
+ *  Used to redirect status bar appearance events.
+ */
+@property (weak, nonatomic) UIViewController *sourceViewController;
 
 /**
  *  Backdrop view.
  */
-@property (readonly) UIView *backdropView;
+@property (nonatomic, readonly) UIView *backdropView;
 
 /**
  *  Whether view controller should show a backdrop view.

@@ -21,10 +21,7 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
 
 @interface PBPopinContainerViewController ()
 
-/**
- *  Current content controller.
- */
-@property (readwrite) UIViewController *contentViewController;
+@property (nonatomic, readwrite) UIViewController *contentViewController;
 
 /**
  *  This view is used for animations and contains accessory view and content view.
@@ -34,18 +31,18 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
 /**
  *  Backdrop view.
  */
-@property (readwrite) UIView *backdropView;
+@property (nonatomic, readwrite) UIView *backdropView;
 
 @end
 
 @implementation PBPopinContainerViewController
 
 - (UIViewController *)childViewControllerForStatusBarStyle {
-    return self.contentViewController;
+    return [self _viewControllerForHandlingStatusBarAppearance];
 }
 
 - (UIViewController *)childViewControllerForStatusBarHidden {
-    return self.contentViewController;
+    return [self _viewControllerForHandlingStatusBarAppearance];
 }
 
 - (void)loadView {
@@ -440,6 +437,33 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     if(accessoryView.superview == self.transitionView) {
         [accessoryView removeFromSuperview];
     }
+}
+
+/**
+ *  Find out controller that should handle status bar appearance
+ *
+ *  @return UIViewController
+ */
+- (UIViewController *)_viewControllerForHandlingStatusBarAppearance {
+    /*
+     Let UIKit container controllers handle appearance when possible
+     */
+    if(self.sourceViewController.navigationController) {
+        return self.sourceViewController.navigationController;
+    }
+    
+    if(self.sourceViewController.tabBarController) {
+        return self.sourceViewController.tabBarController;
+    }
+    
+    if(self.sourceViewController.splitViewController) {
+        return self.sourceViewController.splitViewController;
+    }
+    
+    /*
+     Otherwise let source controller handle appearance himself
+     */
+    return self.sourceViewController;
 }
 
 @end
