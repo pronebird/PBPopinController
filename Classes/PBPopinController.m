@@ -122,32 +122,30 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
     [self _removeDismissOnScrollHandler];
     [self _removeDismissOnBackdropTap];
     
-    [self.containerController setContentViewController:nil
-                                              animated:animated
-                                    alongsideAnimation:^{
-                                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                                        
-                                        // fade backdrop
-                                        strongSelf.containerController.showsBackdrop = NO;
-                                    } completion:^{
-                                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                                        
-                                        // check if still dismissed
-                                        if(!strongSelf.presented) {
-                                            [strongSelf.class popinWindow].rootViewController = nil;
-                                            strongSelf.containerController = nil;
-                                            strongSelf.contentViewController.popinController = nil;
-                                            
-                                            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-                                            [strongSelf _hidePopinWindow];
-                                            
-                                            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:nil];
-                                        }
-                                        
-                                        if(completion) {
-                                            completion();
-                                        }
-                                    }];
+    [self.containerController setContentViewController:nil animated:animated alongsideAnimation:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        // fade backdrop
+        strongSelf.containerController.showsBackdrop = NO;
+    } completion:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        // check if still dismissed
+        if(!strongSelf.presented) {
+            [strongSelf.class popinWindow].rootViewController = nil;
+            strongSelf.containerController = nil;
+            strongSelf.contentViewController.popinController = nil;
+            
+            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+            [strongSelf _hidePopinWindow];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidDisappearNotification object:nil];
+        }
+        
+        if(completion) {
+            completion();
+        }
+    }];
 }
 
 #pragma mark - Private
@@ -240,19 +238,16 @@ NSString* const PBPopinControllerAnimationCurveUserInfoKey = @"animationCurve";
         
         __weak typeof(self) weakSelf = self;
         
-        [self.containerController setContentViewController:self.contentViewController
-                                                  animated:animated
-                                        alongsideAnimation:alongsideAnimation
-                                                completion:^{
-                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                    
-                                                    // check if still presented
-                                                    if(strongSelf.presented) {
-                                                        [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:nil];
-                                                    }
-                                                    
-                                                    animationFinished();
-                                                }];
+        [self.containerController setContentViewController:self.contentViewController animated:animated alongsideAnimation:alongsideAnimation completion:^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            
+            // check if still presented
+            if(strongSelf.presented) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:PBPopinControllerDidAppearNotification object:nil];
+            }
+            
+            animationFinished();
+        }];
     }
 }
 

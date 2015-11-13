@@ -78,13 +78,9 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     };
     
     if(animated) {
-        [UIView animateWithDuration:[self transitionDuration]
-                              delay:0.0
-                            options:[self _animationOptions]
-                         animations:^{
-                             [self setShowsBackdrop:showsBackdrop];
-                         }
-                         completion:^(BOOL finished) {}];
+        [UIView animateWithDuration:[self transitionDuration] delay:0.0 options:[self _animationOptions] animations:^{
+            [self setShowsBackdrop:showsBackdrop];
+        } completion:^(BOOL finished) {}];
     }
     else {
         animationBlock();
@@ -111,37 +107,33 @@ MARKER_CLASS(_PBPopinContainerView, UIView)
     {
         self.contentViewController = nil;
         
-        [self _dismissContentViewController:presentedContentController animated:animated
-                         alongsideAnimation:alongsideAnimation
-                                 completion:^(BOOL finished) {
-                                     if(!finished) {
-                                         return;
-                                     }
-                                     
-                                     // remove content view controller
-                                     [self _removeContentViewController:presentedContentController];
-                                     
-                                     if(completion) {
-                                         completion();
-                                     }
-                                 }];
+        [self _dismissContentViewController:presentedContentController animated:animated alongsideAnimation:alongsideAnimation completion:^(BOOL finished) {
+            if(!finished) {
+                return;
+            }
+            
+            // remove content view controller
+            [self _removeContentViewController:presentedContentController];
+            
+            if(completion) {
+                completion();
+            }
+        }];
     }
     else if(!presentedContentController) // if there is currently no controller presented
     {
         self.contentViewController = contentViewController;
         
         [self _addContentViewController:contentViewController animated:NO];
-        [self _presentContentViewController:contentViewController animated:animated
-                         alongsideAnimation:alongsideAnimation
-                                 completion:^(BOOL finished) {
-                                     if(!finished) {
-                                         return;
-                                     }
-                                     
-                                     if(completion) {
-                                         completion();
-                                     }
-                                 }];
+        [self _presentContentViewController:contentViewController animated:animated alongsideAnimation:alongsideAnimation completion:^(BOOL finished) {
+            if(!finished) {
+                return;
+            }
+            
+            if(completion) {
+                completion();
+            }
+        }];
     }
     else // replace current controller
     {
