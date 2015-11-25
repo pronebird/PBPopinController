@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'PBPopinController'
-  s.version  = '0.4.0'
+  s.version  = '0.4.1'
   s.license  = 'MIT'
   s.summary  = 'Custom container controller with keyboard-like presentation.'
   s.homepage = 'https://github.com/pronebird/PBPopinController'
